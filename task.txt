@@ -1,0 +1,467 @@
++-----------------------------------------------------+
+| Pizzeria Da Asporto           [Fatturato: €500]    |
+| Data e ora: 19:00, 30 Nov 2024                     |
++-----------------------------------------------------+
+| Ordini Attivi             |  Statistiche          |
+| #12345 - In Preparazione  |  Totale Ordini: 20    |
+| #12346 - Pronto           |  Ritardo Medio: 5min  |
+| #12347 - In Preparazione  |  Completati: 15       |
+|---------------------------|-----------------------|
+| Ordini in Ritardo         |  Notifiche Importanti |
+| #12340 - Ritardo +15min   |  ⚠️ Scorte Mozzarella |
+|---------------------------|  ⚠️ Ritardo 30 min    |
+| Pagamenti Pendenti        |-----------------------|
+| #12339 - Totale: €20      |                       |
++-----------------------------------------------------+
+
+
+
++--------------------------+-------------------------------------------------------------------------+---------------------+-------------------------------------------------------------------------------------------------------+
+| Fase                    | Azione                                                                  | Stato dell'ordine  | Note/Suggerimenti                                                                                     |
++--------------------------+-------------------------------------------------------------------------+---------------------+-------------------------------------------------------------------------------------------------------+
+| Ricezione dell'ordine    | 1. Ricezione da telefono, cliente al banco, WhatsApp, o sito.           | Da fare            | - Integra verifica automatica di orario slot e dati mancanti.                                         |
+|                          | 2. Inserimento dettagli nel modulo digitale.                           |                     | - Precompilazione dati per clienti ricorrenti.                                                        |
+|                          | 3. Invio conferma automatica al cliente.                               |                     | - Notifica immediata con riepilogo ordine tramite SMS/WhatsApp/email.                                 |
++--------------------------+-------------------------------------------------------------------------+---------------------+-------------------------------------------------------------------------------------------------------+
+| Salvataggio dell'ordine  | 1. Salvare ordine con codice univoco e metodo di pagamento.             | Da fare            | - Registrare "Note speciali" per richieste particolari.                                               |
+|                          | 2. Ordinare in base a orario e complessità.                            |                     | - Gestione automatica di sovraccarichi con suggerimenti di orario.                                    |
+|                          | 3. Notificare eventuali problemi.                                       |                     | - Comunicazione automatica in caso di ritardi previsti.                                               |
++--------------------------+-------------------------------------------------------------------------+---------------------+-------------------------------------------------------------------------------------------------------+
+| Gestione degli slot       | 1. Algoritmo assegna slot in base a orario e carico risorse.           | Da fare            | - Aggiungere "Priorità" per ordini urgenti.                                                          |
+|                          | 2. Stampa comanda automatica quando lo slot è disponibile.             |                     | - Ridurre interventi manuali e monitorare slot liberi/pieni.                                          |
+|                          | 3. Consentire modifiche manuali con tracciamento operatore.            |                     |                                                                                                       |
++--------------------------+-------------------------------------------------------------------------+---------------------+-------------------------------------------------------------------------------------------------------+
+| Stampa della comanda      | 1. Generare comanda con QR code per tracciamento.                      | In preparazione    | - Stampa dettagli ordine: cliente, elenco pizze, orario, note.                                        |
+|                          | 2. Tracciare orario di stampa per analisi dei tempi.                   |                     |                                                                                                       |
++--------------------------+-------------------------------------------------------------------------+---------------------+-------------------------------------------------------------------------------------------------------+
+| Preparazione             | 1. Interfaccia visiva per pizzaioli con ordini in coda.                | In preparazione    | - Timer dedicati per monitorare tempi di preparazione.                                                |
+|                          | 2. Aggiornamento automatico del sistema da parte del pizzaiolo.        |                     |                                                                                                       |
++--------------------------+-------------------------------------------------------------------------+---------------------+-------------------------------------------------------------------------------------------------------+
+| Pizza pronta             | 1. Notifica a cassiera e cliente.                                      | Pronto per la       | - Etichettatura automatica delle pizze con numero ordine e nome cliente.                              |
+|                          | 2. Checklist per consegne multiple.                                    | consegna           |                                                                                                       |
++--------------------------+-------------------------------------------------------------------------+---------------------+-------------------------------------------------------------------------------------------------------+
+| Consegna/ritiro          | 1. Conferma consegna tramite firma digitale o app.                     | Consegnato         | - Rider/cliente segnalano eventuali problemi in tempo reale.                                          |
+|                          | 2. Cambiare stato in "Consegnato" con timestamp.                       |                     | - Registra feedback istantanei dal cliente.                                                          |
++--------------------------+-------------------------------------------------------------------------+---------------------+-------------------------------------------------------------------------------------------------------+
+
+nel setting: segnare orari pizzeria
+
+- Integra verifica automatica di orario slot e dati mancanti.     
+determinare quanto grande deve essere lo slot  [selezione orario da utente]
+determinare quanti ordini può avere uno slot [selezionarlo da utente]
+
+[[[Stati dello slot:
+Disponibile: Slot libero per nuovi ordini.
+Parzialmente pieno: Alcuni ordini assegnati.
+Completamente pieno: Non accetta nuovi ordini.]]]
+
+Logica slot
+Il sistema genera slot basati su orari di apertura della pizzeria
+
+
+
+
+
+
+
+
+
+
+
++-------------------------------------------------------------------------------------------------------+
+| MENU LATERALE                           | ELENCO COMPLETO DEGLI ORDINI                  | PRIORITÀ       |
++-----------------------------------------+---------------------------------------------+----------------+
+| [Ordini]                                | Numero Ordine | Cliente         | Stato       | ORDINI DA      |
+| [Clienti]                               |--------------|-----------------|--------------| ESEGUIRE:      |
+| [Menù Pizzeria]                         | #001          | Mario Rossi     | Da fare     | +-------------+|
+| [Slot Temporali]                        | #002          | Lucia Verdi     | In prep.    | | Numero: #003 ||
+| [Reportistica]                          | #003          | Paolo Bianchi   | Pronto      | | Cliente: Paolo|
+| [Notifiche 🔴]                          | #004          | Giovanna Neri   | Consegnato | | Stato: Pronto||
+| [Impostazioni]                          |-----------------------------------------------| +-------------+|
+|-----------------------------------------|-----------------------------------------------| ORDINI PRONTI: |
+|                                         | Filtri: [Tutti] [Da Fare] [In Preparaz.]      | +-------------+|
+|                                         |         [Pronti] [Consegnati]                 | | Numero: #006 ||
+|                                         | Numero Ordine | Cliente         | Stato       | | Cliente: Sara |
+|                                         | #005          | Luigi Verdi     | Da fare     | | Stato: Pronto||
+|                                         | #006          | Sara Neri       | Pronto      | +-------------+|
+|                                         |---------------------------------------------  | CONSEGNATI:    |
+|                                         | Pagine: [1] 2 3 >                             | +-------------+|
+|                                         |                                               | | Numero: #004 ||
+|                                         |                                               | | Cliente: Giov |
+|                                         |                                               | | Stato: Consegn|
+|                                         |                                               | +-------------+|
++-------------------------------------------------------------------------------------------------------+
+
+
+
++-----------------------------------------------------------------------------------------------------------------+
+| DASHBOARD INIZIALE                           | ELENCO COMPLETO DEGLI ORDINI                   | PRIORITÀ       |
++---------------------------------------------+---------------------------------------------+---------------------+
+| Ordini Totali: 34   | Ordini Da Fare: 10     | Numero Ordine | Cliente         | Stato        | ORDINI DA      |
+| Incassi Giornalieri: € 1.230                |---------------|-----------------|------------   | ESEGUIRE:      |
+| Ordini in Ritardo: 2                        | #001          | Mario Rossi     | Da fare       | +-------------+|
+|---------------------------------------------| #002          | Lucia Verdi     | In prep.     | | Numero: #003 ||
+| [Ordini] [Clienti] [Menu Pizzeria]          | #003          | Paolo Bianchi   | Pronto       | | Cliente: Paolo|
+| [Slot Temporali] [Reportistica]             |---------------------------------------------   | | Stato: Pronto||
+|---------------------------------------------| Filtri: [Tutti] [Da Fare] [Pronti]             | +-------------+|
+| NOTIFICHE:                                  | Numero Ordine | Cliente         | Stato        | ORDINI PRONTI: |
+| - Nuovo Ordine da Mario Rossi               | #004          | Giovanna Neri   | Consegnato   | +-------------+|
+| - Ordine #005 in ritardo!                   |---------------------------------------------   | | Numero: #006 ||
+|---------------------------------------------| Pagine: [1] 2 3 >                              | | Cliente: Sara |
+|                                             |                                                | | Stato: Pronto||
++-----------------------------------------------------------------------------------------------------------------+
+
+
+
+ORDINI IN RITARDO: 🔴 2
+PROGRESSO GIORNALIERO: [■■■■■■■■■■■■□□] 70% COMPLETATI
+
+| Numero Ordine | Cliente         | Stato        | Azioni          |
+|---------------|-----------------|--------------|-----------------|
+| #001          | Mario Rossi     | 🟠 Da fare   | [Modifica] [Stampa Comanda] [Pronto] |
+| #002          | Lucia Verdi     | 🟡 In prep.  | [Modifica] [Pronto]               |
+| #003          | Paolo Bianchi   | 🟢 Pronto    | [Notifica Cliente]                |
+
+
+NOTIFICHE:
+🔔 Nuovo ordine da Mario Rossi [Visualizza]
+⚠️ Ordine #005 in ritardo! [Risolvi]
+
+
+
++------------------------------------------------------------------------------------------------------------+
+| FILTRI: [Tutti] [Da Fare] [In Preparazione] [Pronti] [Consegnati] [Nome Cliente: ___________] [🔍 Cerca]   |
++------------------------------------------------------------------------------------------------------------+
+| Numero Ordine | Cliente         | Stato        | Orario   | Note               | Azioni                     |
+|---------------|-----------------|--------------|----------|--------------------|----------------------------|
+| #001          | Mario Rossi     | 🟠 Da fare   | 19:30    | Extra mozzarella   | [Modifica] [Pronto] [Stampa]|
+| #002          | Lucia Verdi     | 🟡 In prep.  | 19:45    | No cipolla         | [Modifica] [Pronto]         |
+| #003          | Paolo Bianchi   | 🟢 Pronto    | 20:00    | Consegnare veloce  | [Notifica Cliente]          |
+| #004          | Giovanna Neri   | ⚪ Consegnato | 20:15    |                    | [Visualizza Storico]        |
++------------------------------------------------------------------------------------------------------------+
+| PAGINE: [1] 2 3 >                                                                                         |
++------------------------------------------------------------------------------------------------------------+
+
+
+
+
+
++-----------------------------------------------------------------------------------------------------------------+
+| DASHBOARD INIZIALE                           | ELENCO COMPLETO DEGLI ORDINI                   | PRIORITÀ       |
++---------------------------------------------+---------------------------------------------+---------------------+
+| Ordini Totali: 34   | Ordini Da Fare: 10     | Numero Ordine | Cliente         | Stato        | ORDINI DA      |
+| Incassi Giornalieri: € 1.230                |---------------|-----------------|------------   | ESEGUIRE:      |
+| Ordini in Ritardo: 2                        | #001          | Mario Rossi     | 🟠 Da fare    | +-------------+|
+|---------------------------------------------| #002          | Lucia Verdi     | 🟡 In prep.   | | Numero: #003 ||
+| [Ordini] [Clienti] [Menu Pizzeria]          | #003          | Paolo Bianchi   | 🟢 Pronto     | | Cliente: Paolo|
+| [Slot Temporali] [Reportistica]             |---------------|-----------------|------------   | | Stato: Pronto||
+|---------------------------------------------| Orario   | Note              | Azioni        | +-------------+|
+| NOTIFICHE:                                  | 19:30    | Extra mozzarella  | [Modifica]    | ORDINI PRONTI: |
+| - Nuovo Ordine da Mario Rossi               | 19:45    | No cipolla        | [Pronto]      | +-------------+|
+| - Ordine #005 in ritardo!                   | 20:00    | Consegnare veloce | [Notifica]    | | Numero: #006 ||
+|---------------------------------------------|---------------|-----------------|------------   | | Cliente: Sara |
+| Filtri: [Tutti] [Da Fare] [Pronti] [🔍 Cerca Cliente: _______]                  | | Stato: Pronto||
+| Pagine: [1] 2 3 >                           |                                                | +-------------+|
+|                                             |                                                | [Azioni Qui...]|
++-----------------------------------------------------------------------------------------------------------------+
+
+
+
+
+
+
++-----------------------------------------------------------------------------------------------------------------+
+| DASHBOARD INIZIALE                                                                                            |
++-----------------------------------------------------------------------------------------------------------------+
+| Ordini Totali: 34   | Ordini Da Fare: 10     | Ordini Pronti: 5     | Ordini in Ritardo: 2                      |
+| Incassi Giornalieri: € 1.230                | Grafico Progressivo: [■■■■■■■■■■■■□□] 70% COMPLETATI              |
++-----------------------------------------------------------------------------------------------------------------+
+
++---------------------------------------------+---------------------------------------------+---------------------+
+| ELENCO COMPLETO DEGLI ORDINI                | PRIORITÀ DEGLI ORDINI                       |                     |
++---------------------------------------------+---------------------------------------------+---------------------+
+| Numero Ordine | Cliente         | Stato        | Orario   | Note              | Azioni     | ORDINI DA          |
+|---------------|-----------------|--------------|----------|-------------------|------------| ESEGUIRE:          |
+| #001          | Mario Rossi     | 🟠 Da fare   | 19:30    | Extra mozzarella  | [Modifica] | +-------------+    |
+| #002          | Lucia Verdi     | 🟡 In prep.  | 19:45    | No cipolla        | [Pronto]   | | Numero: #003 |    |
+| #003          | Paolo Bianchi   | 🟢 Pronto    | 20:00    | Consegnare veloce | [Notifica] | | Cliente: Paolo|    |
+|---------------------------------------------+---------------------------------------------| | Stato: Pronto|    |
+| Filtri: [Tutti] [Da Fare] [In Prep.] [Pronti] [🔍 Cerca Cliente: _______]                 | +-------------+    |
+| Pagine: [1] 2 3 >                                                                                          |
++---------------------------------------------+---------------------------------------------+-----------------------+
+
+
+
+
++-----------------------------------------------------------------------------------------------------------------+
+| DASHBOARD INIZIALE                                                                                            |
++-----------------------------------------------------------------------------------------------------------------+
+| Ordini Totali: 34   | Ordini Da Fare: 10     | Ordini Pronti: 5     | Ordini in Ritardo: 2                      |
+| Incassi Giornalieri: € 1.230                | Grafico Progressivo: [■■■■■■■■■■■■□□] 70% COMPLETATI              |
++-----------------------------------------------------------------------------------------------------------------+
+| Filtri: [Tutti] [Da Fare] [In Prep.] [Pronti]  | Cerca Cliente: [_____________] [🔍 Cerca]                      |
++-----------------------------------------------------------------------------------------------------------------+
+
++---------------------------------------------+---------------------------------------------+---------------------+
+| ELENCO COMPLETO DEGLI ORDINI                | PRIORITÀ DEGLI ORDINI                       |                     |
++---------------------------------------------+---------------------------------------------+---------------------+
+| Numero Ordine | Cliente         | Stato        | Orario   | Note              | Azioni     | ORDINI DA          |
+|---------------|-----------------|--------------|----------|-------------------|------------| ESEGUIRE:          |
+| #001          | Mario Rossi     | 🟠 Da fare   | 19:30    | Extra mozzarella  | [Modifica] | +-------------+    |
+| #002          | Lucia Verdi     | 🟡 In prep.  | 19:45    | No cipolla        | [Pronto]   | | Numero: #003 |    |
+| #003          | Paolo Bianchi   | 🟢 Pronto    | 20:00    | Consegnare veloce | [Notifica] | | Cliente: Paolo|    |
+|---------------------------------------------+---------------------------------------------| | Stato: Pronto|    |
+| Pagine: [1] 2 3 >                                                                                          |
++---------------------------------------------+---------------------------------------------+-----------------------+
+
+
+
+
+
+
+
+
+
+
++=================================================================================================================+
+| DASHBOARD INIZIALE                                                                                              |
++=================================================================================================================+
+| Ordini Totali: 34   | Ordini Da Fare: 10     | Ordini Pronti: 5     | Ordini in Ritardo: 2                      |
+|---------------------------------------------------------------------------------------------------------------|
+| Incassi Giornalieri: € 1.230                | Progresso Giornaliero: [■■■■■■■■■■■■□□] 70% COMPLETATI            |
++=================================================================================================================+
+| Filtri: [Tutti] [Da Fare] [In Preparazione] [Pronti] [Consegnati]  | Cerca Cliente: [_____________] [🔍 Cerca]  |
++=================================================================================================================+
+
++---------------------------------------------+---------------------------------------------+-----------------------+
+|              ELENCO COMPLETO DEGLI ORDINI               |               PRIORITÀ DEGLI ORDINI                     |
++---------------------------------------------+---------------------------------------------+-----------------------+
+| Numero Ordine | Cliente         | Stato        | Orario   | Note              | Azioni     | ORDINI DA            |
+|---------------|-----------------|--------------|----------|-------------------|------------| ESEGUIRE:            |
+| #001          | Mario Rossi     | 🟠 Da fare   | 19:30    | Extra mozzarella  | [Modifica] | +-------------+      |
+| #002          | Lucia Verdi     | 🟡 In prep.  | 19:45    | No cipolla        | [Pronto]   | | Numero: #003 |      |
+| #003          | Paolo Bianchi   | 🟢 Pronto    | 20:00    | Consegnare veloce | [Notifica] | | Cliente: Paolo|      |
+| #004          | Giovanna Neri   | ⚪ Consegnato | 20:15    |                   | [Storico]  | | Stato: Pronto|      |
+|---------------------------------------------+---------------------------------------------| +-------------+      |
+| Pagine: [1] 2 3 >                                                                                              |
+|---------------------------------------------+---------------------------------------------| ORDINI PRONTI:        |
+|                                             |                                             | +-------------+      |
+|                                             |                                             | | Numero: #006 |      |
+|                                             |                                             | | Cliente: Sara |      |
+|                                             |                                             | | Stato: Pronto|      |
+|                                             |                                             | +-------------+      |
++---------------------------------------------+---------------------------------------------+-----------------------+
+
+
+
+
+
+
+
+
+
++=================================================================================================================+
+| DASHBOARD INIZIALE                                                                                              |
++=================================================================================================================+
+| ORDINI: Totali: 34   | Da Fare: 10   | In Preparazione: 5   | Pronti: 5   | Consegnati: 14   | Ritardi: 2         |
+|---------------------------------------------------------------------------------------------------------------|
+| INCASSI: Giornalieri: € 1.230   | Settimanali: € 8.540                                                            |
+| PROGRESSO GIORNALIERO: [■■■■■■■■■■■■□□] 70% COMPLETATI                                                          |
++=================================================================================================================+
+| FILTRI: [Tutti] [Da Fare] [In Preparazione] [Pronti] [Consegnati] | Cerca Cliente: [______________________] 🔍  |
++=================================================================================================================+
+
++-------------------------------------------------------+---------------------------------------------+-------------+
+|            ELENCO COMPLETO DEGLI ORDINI              |              PRIORITÀ DEGLI ORDINI          |             |
++-------------------------------------------------------+---------------------------------------------+-------------+
+| Numero | Cliente         | Stato      | Orario   | Note              | Azioni                    | ORDINI DA    |
+| Ordine |                 |            |          |                   |                            | ESEGUIRE:    |
+|--------|-----------------|------------|----------|-------------------|----------------------------| +-----------+|
+| #001   | Mario Rossi     | 🟠 Da fare | 19:30    | Extra mozzarella  | [Modifica] [Pronto]        | | Numero:   ||
+| #002   | Lucia Verdi     | 🟡 In prep | 19:45    | No cipolla        | [Modifica] [Pronto]        | |   #003    ||
+| #003   | Paolo Bianchi   | 🟢 Pronto  | 20:00    | Consegnare veloce | [Notifica] [Storico]       | | Cliente:  ||
+| #004   | Giovanna Neri   | ⚪ Consegn | 20:15    |                   | [Storico]                  | |   Paolo   ||
+|--------|-----------------|------------|----------|-------------------|----------------------------| | Stato:    ||
+| Pagine: [1] 2 3 >                                                                                 | |  Pronto   ||
++-------------------------------------------------------+---------------------------------------------| +-----------+|
+| ORDINI PRONTI:                                                                                              |
+| +-----------+                                                                                            |
+| | Numero:   | Cliente: Sara | Stato: 🟢 Pronto                                                            |
+| |   #006    |               |                                                                             |
+| +-----------+                                                                                            |
++-------------------------------------------------------+---------------------------------------------+-------------+
+
+
+
+
+
+
+
++=================================================================================================================+
+| DASHBOARD PIZZERIA DA ASPORTO                                                                                   |
++=================================================================================================================+
+| ORDINI: Totali: 34   | Da Fare: 10   | In Preparazione: 5   | Pronti: 5   | Consegnati: 14   | Ritardi: 2         |
+| INCASSI: Giornalieri: € 1.230   | Settimanali: € 8.540                                                            |
+| PROGRESSO GIORNALIERO: [■■■■■■■■■■■■□□] 70% COMPLETATI                                                          |
++=================================================================================================================+
+| FILTRI: [Tutti] [Da Fare] [In Preparazione] [Pronti] [Consegnati] | Cerca Cliente: [__________] 🔍             |
++=================================================================================================================+
+
++--------------------------------------+--------------------------+-----------------------------------------------+
+|              ORDINI                 |     IN PRIMA FILA        |                 AZIONI                        |
++--------------------------------------+--------------------------+-----------------------------------------------+
+| #001 Mario Rossi   🟠 Da fare        | 19:30 Extra mozzarella  | [Modifica] [Pronto]                           |
+| #002 Lucia Verdi   🟡 In prep        | 19:45 No cipolla        | [Modifica] [Pronto]                           |
+| #003 Paolo Bianchi 🟢 Pronto         | 20:00 Vel consegna      | [Notifica] [Storico]                          |
+| #004 Giovanna Neri ⚪ Consegnato     | 20:15                   | [Storico]                                     |
++--------------------------------------+--------------------------+-----------------------------------------------+
+
++======================================+==========================================================================+
+| ORDINI PRONTI                                                                                                   |
++--------------------------------------+--------------------------+-----------------------------------------------+
+| #005 Sara Gialli 🟢 Pronto           | 19:35 Senza salsa       | [Consegna]                                    |
++======================================+==========================================================================+
+
+
+
+
++=================================================================================================================+
+| DASHBOARD PIZZERIA DA ASPORTO                                                                                   |
++=================================================================================================================+
+| ORDINI: Totali: 34   | Da Fare: 10   | In Preparazione: 5   | Pronti: 5   | Consegnati: 14   | Ritardi: 2         |
+|---------------------------------------------------------------------------------------------------------------|
+| INCASSI: Giornalieri: € 1.230   | Settimanali: € 8.540                                                            |
+| PROGRESSO GIORNALIERO: [■■■■■■■■■■■■□□] 70% COMPLETATI                                                          |
++=================================================================================================================+
+
++---------------------+---------------------+---------------------+---------------------+---------------------+
+|       DA FARE       |  IN PREPARAZIONE   |        PRONTO       |     CONSEGNATO      |     RITARDI         |
++---------------------+---------------------+---------------------+---------------------+---------------------+
+| +-----------------+ | +-----------------+ | +-----------------+ | +-----------------+ | +-----------------+ |
+| | #001 Mario Rossi| | | #002 Lucia Verdi| | | #003 Paolo Bian | | | #004 Giovanna   | | | #005 Ritardo    | |
+| | 19:30           | | | 19:45           | | | 20:00           | | | 20:15           | | | 18:50           | |
+| | Extra mozzarel. | | | No cipolla      | | | Consegnare velo | | |                 | | | Urgente!        | |
+| | [✔ In Prep]     | | | [✔ Pronto]      | | | [✔ Consegnato]  | | | [Storico]       | | | [✔ Pronto]      | |
+| +-----------------+ | +-----------------+ | +-----------------+ | +-----------------+ | +-----------------+ |
+| +-----------------+ | +-----------------+ |                     |                     |                     |
+| | #006 Sara Gialli| | |                 | |                     |                     |                     |
+| | 19:35           | | |                 | |                     |                     |                     |
+| | Senza salsa     | | |                 | |                     |                     |                     |
+| | [✔ Pronto]      | | |                 | |                     |                     |                     |
+| +-----------------+ | +-----------------+ |                     |                     |                     |
++---------------------+---------------------+---------------------+---------------------+---------------------+
+
+
+
+
+
+
+
++=================================================================================================================+
+| DASHBOARD PIZZERIA DA ASPORTO                                                                                   |
++=================================================================================================================+
+| ORDINI: Totali: 34   | Da Fare: 10   | In Preparazione: 5   | Pronti: 5   | Consegnati: 14   | Ritardi: 2         |
+| INCASSI: Giornalieri: € 1.230   | Settimanali: € 8.540                                                            |
+| PROGRESSO GIORNALIERO: [■■■■■■■■■■■■□□] 70% COMPLETATI                                                          |
++=================================================================================================================+
+
++---------------------+-------------------------------------------------------------+-----------------------------+
+|       MENU          |               ORDINI IN ENTRATA E IN PREPARAZIONE           |         PIZZE PRONTE        |
++---------------------+-------------------------------------------------------------+-----------------------------+
+| [📋 Dashboard]      | +-----------------+  +-----------------+  +-----------------+ | +-----------------------+   |
+| [➕ Nuovo Ordine]    | | #001 Mario Rossi|  | #002 Lucia Verdi|  | #003 Paolo Bian | | | #004 Giovanna Neri    |   |
+| [📦 Storico Ordini]  | | 19:30           |  | 19:45           |  | 20:00           | | | 20:15                 |   |
+| [📊 Report Vendite]  | | Extra mozzarel.|  | No cipolla      |  | Vel consegna    | | | Pronta per consegna   |   |
+| [⚙️ Impostazioni]    | | [✔ In Prep]     |  | [✔ Pronto]      |  | [✔ Pronto]      | | | [✔ Consegnato]        |   |
+|                     | +-----------------+  +-----------------+  +-----------------+ | +-----------------------+   |
+|                     | +-----------------+  +-----------------+                     | +-----------------------+   |
+|                     | | #005 Sara Gialli|  | #006 Marco Blu  |                     | | #007 Mario Rossi       |   |
+|                     | | 19:35           |  | 19:50           |                     | | 20:20                 |   |
+|                     | | Senza salsa     |  | No pomodoro     |                     | | Pronta per consegna   |   |
+|                     | | [✔ Pronto]      |  | [✔ In Prep]     |                     | | [✔ Consegnato]        |   |
+|                     | +-----------------+  +-----------------+                     | +-----------------------+   |
++---------------------+-------------------------------------------------------------+-----------------------------+
+
+
+
+
+
+
+
+
+
++=================================================================================================================+
+| DASHBOARD PIZZERIA DA ASPORTO                                                                                     |
++=================================================================================================================+
+| ORDINI: Totali: 34   | Da Fare: 10   | In Preparazione: 5   | Pronti: 5   | Consegnati: 14   | Ritardi: 2         |
+| INCASSI: Giornalieri: € 1.230   | Settimanali: € 8.540                                                            |
+| PROGRESSO GIORNALIERO: [■■■■■■■■■■■■□□] 70% COMPLETATI                                                            |
++=================================================================================================================+
+
++---------------------+-------------------------------------------------------------+-----------------------------+
+|       MENU          |               ORDINI IN ENTRATA E IN PREPARAZIONE           |         PIZZE PRONTE        |
++---------------------+-------------------------------------------------------------+-----------------------------+
+| [📋 Dashboard]      | +-------------------------------------------------------+   | +-----------------------+   |
+| [➕ Nuovo Ordine]    | | #001 Mario Rossi    🟠 Da Fare  | 19:30 Extra mozzarel.  |   | | #004 Giovanna Neri    🟢 |   |
+| [📦 Storico Ordini]  | | [Modifica] [In Prep] [Annulla] |                         |   | | Pronta per consegna   |   |
+| [📊 Report Vendite]  | +-------------------------------------------------------+  | | [✔ Consegnato]        |   |
+| [⚙️ Impostazioni]    | +-------------------------------------------------------+  | +-----------------------+   |
+|                     | | #002 Lucia Verdi    🟡 In Prep  | 19:45 No cipolla        |   | +-----------------------+   |
+|                     | | [Modifica] [Pronto] [Annulla]  |                          |   | | #005 Sara Gialli      |   |
+|                     | +-------------------------------------------------------+   | | Pronta per consegna   |   |
+|                     | +-------------------------------------------------------+   | | [✔ Consegnato]        |   |
+|                     | | #003 Paolo Bianchi  🟢 Pronto   | 20:00 Vel consegna      |   | +-----------------------+   |
+|                     | | [Notifica] [Consegna]           |                         |                             |
+|                     | +-------------------------------------------------------+   |                             |
++---------------------+-------------------------------------------------------------+-----------------------------+
+
+
+
+
+
+
+
+
+
+
+
+
+cosa fa una pizzeria da asporto?
+riceve ordini da telefono o dal cliente o da cellulare messaggio/whatsapp o online dal sito [L'ordine include: nome cognome, telefono, indirizzo, numero pizze, lista pizze, definire orario, indirizzo se da asporto] tasto salva
+Salvato l'ordine, [da fare] un sistema di slot gestisce quando far stampare la comanda e la ordina in base all'orario di consegna
+una volta che viene stampata la comanda, cambia [stato in preparazione]
+una volta che la pizza è pronta il pizzaiolo avvisa la cassiera che cambia lo stato in [pronto per la consegna]
+consegnata la pizza lo stato è [consegnato]
+
+
+
+
+
+
+
+1. Ordine Cronologico
+Approccio Base:
+Le comande vengono mostrate in ordine di arrivo (FIFO - First In, First Out).
+Ogni comanda ha un timestamp che permette al pizzaiolo di sapere quale ordine preparare per primo.
+Vantaggi:
+Semplice e intuitivo.
+Ideale per: Pizzerie con un flusso di ordini moderato.
+
+
+4. Visualizzazione dello Stato delle Comande
+Categorie di Stato:
+In attesa
+In preparazione
+Pronto
+Flusso:
+Il pizzaiolo segna una comanda come "In preparazione" quando inizia a lavorarci.
+Una volta completata, segna la comanda come "Pronta".
+Il personale di sala o il cassiere può vedere lo stato in tempo reale.
+Vantaggi:
+Riduce la confusione e migliora la comunicazione interna.
+
+
+
+
+calendario
+04/12/2024 => 19:45 20:45

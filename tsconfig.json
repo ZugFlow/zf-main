@@ -1,0 +1,47 @@
+{
+  "compilerOptions": {
+    "target": "esnext", // Supporto per le ultime funzionalità di JavaScript
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ], // Librerie supportate
+    "allowJs": true, // Consenti l'uso di file JavaScript
+    "skipLibCheck": true, // Ignora il controllo dei tipi nelle librerie
+    "strict": true, // Abilita controlli stretti di TypeScript
+    "noEmit": true, // Evita l'emissione di file compilati
+    "esModuleInterop": true, // Supporto per importazioni CommonJS
+    "module": "esnext", // Specifica il modulo JavaScript
+    "moduleResolution": "node", // Risoluzione dei moduli compatibile con Node.js
+    "resolveJsonModule": true, // Consenti l'importazione di file JSON
+    "isolatedModules": true, // Assicura che ogni file sia trattato come un modulo indipendente
+    "jsx": "preserve", // Mantiene JSX per Next.js
+    "incremental": true, // Compilazione incrementale per migliorare le prestazioni
+    "forceConsistentCasingInFileNames": true, // Assicura coerenza nei nomi dei file
+    "allowSyntheticDefaultImports": true, // Supporto per import predefiniti sintetici
+    "baseUrl": ".", // Configura il percorso di base
+    "paths": {
+      "@/components/*": [
+        "./components/*"
+      ],
+      "@/*": [
+        "./*"
+      ]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
+  },
+  "include": [
+    "next-env.d.ts", // Tipi forniti da Next.js
+    "**/*.ts", // Include tutti i file TypeScript
+    "**/*.tsx", // Include tutti i file TSX
+    ".next/types/**/*.ts", // Include tipi specifici di Next.js
+    "app/**/*" // Percorso dei file di applicazione
+  ],
+  "exclude": [
+    "node_modules"
+  ] // Escludi cartelle non necessarie
+}

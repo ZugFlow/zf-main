@@ -1,0 +1,2390 @@
+﻿export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
+
+export type Database = {
+  public: {
+    Tables: {
+      profiles: {
+        Row: {
+          avatar: string | null
+          email: string | null
+          id: string
+          salon_id: string | null
+        }
+        Insert: {
+          avatar?: string | null
+          email?: string | null
+          id: string
+          salon_id?: string | null
+        }
+        Update: {
+          avatar?: string | null
+          email?: string | null
+          id?: string
+          salon_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      hoursettings: {
+        Row: {
+          user_id: string
+          salon_id: string
+          start_hour: string | null
+          finish_hour: string | null
+          hide_outside_hours: boolean | null
+          formato: string | null
+          SizeCard: string | null
+          CardAlignment: string | null
+        }
+        Insert: {
+          user_id: string
+          salon_id: string
+          start_hour?: string | null
+          finish_hour?: string | null
+          hide_outside_hours?: boolean | null
+          formato?: string | null
+          SizeCard?: string | null
+          CardAlignment?: string | null
+        }
+        Update: {
+          user_id?: string
+          salon_id?: string
+          start_hour?: string | null
+          finish_hour?: string | null
+          hide_outside_hours?: boolean | null
+          formato?: string | null
+          SizeCard?: string | null
+          CardAlignment?: string | null
+        }
+        Relationships: []
+      }
+      holiday_balances: {
+        Row: {
+          id: string
+          member_id: string
+          salon_id: string
+          year: number
+          total_days: number
+          used_days: number
+          pending_days: number
+          notes: string | null
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          member_id: string
+          salon_id: string
+          year?: number
+          total_days?: number
+          used_days?: number
+          pending_days?: number
+          notes?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          member_id?: string
+          salon_id?: string
+          year?: number
+          total_days?: number
+          used_days?: number
+          pending_days?: number
+          notes?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "holiday_balances_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "team"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      permessiferie: {
+        Row: {
+          id: string
+          salon_id: string
+          member_id: string
+          type: 'ferie' | 'permesso' | 'malattia' | 'altro'
+          start_date: string
+          end_date: string
+          start_time: string | null
+          end_time: string | null
+          status: 'pending' | 'approved' | 'rejected'
+          reason: string
+          notes: string | null
+          approved_by: string | null
+          approved_at: string | null
+          rejection_reason: string | null
+          archived: boolean
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          salon_id: string
+          member_id: string
+          type: 'ferie' | 'permesso' | 'malattia' | 'altro'
+          start_date: string
+          end_date: string
+          start_time?: string | null
+          end_time?: string | null
+          status?: 'pending' | 'approved' | 'rejected'
+          reason: string
+          notes?: string | null
+          approved_by?: string | null
+          approved_at?: string | null
+          rejection_reason?: string | null
+          archived?: boolean
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          salon_id?: string
+          member_id?: string
+          type?: 'ferie' | 'permesso' | 'malattia' | 'altro'
+          start_date?: string
+          end_date?: string
+          start_time?: string | null
+          end_time?: string | null
+          status?: 'pending' | 'approved' | 'rejected'
+          reason?: string
+          notes?: string | null
+          approved_by?: string | null
+          approved_at?: string | null
+          rejection_reason?: string | null
+          archived?: boolean
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "permessiferie_salon_id_fkey"
+            columns: ["salon_id"]
+            isOneToOne: false
+            referencedRelation: "salons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "permessiferie_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "team"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "permessiferie_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      custom_variables: {
+        Row: {
+          id: string
+          salon_id: string
+          variable_name: string
+          variable_value: string
+          description: string | null
+          is_active: boolean
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          salon_id: string
+          variable_name: string
+          variable_value: string
+          description?: string | null
+          is_active?: boolean
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          salon_id?: string
+          variable_name?: string
+          variable_value?: string
+          description?: string | null
+          is_active?: boolean
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "custom_variables_salon_id_fkey"
+            columns: ["salon_id"]
+            isOneToOne: false
+            referencedRelation: "salons"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      online_bookings: {
+        Row: {
+          id: string
+          salon_id: string
+          customer_name: string
+          customer_email: string | null
+          customer_phone: string | null
+          requested_date: string
+          requested_time: string
+          booking_date: string
+          start_time: string
+          end_time: string | null
+          service_id: number | null
+          service_name: string
+          service_duration: number
+          service_price: number
+          team_member_id: string | null
+          status: string | null
+          notes: string | null
+          ip_address: string | null
+          user_agent: string | null
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          salon_id: string
+          customer_name: string
+          customer_email?: string | null
+          customer_phone?: string | null
+          requested_date: string
+          requested_time: string
+          booking_date?: string
+          start_time?: string
+          end_time?: string | null
+          service_id?: number | null
+          service_name: string
+          service_duration: number
+          service_price: number
+          team_member_id?: string | null
+          status?: string | null
+          notes?: string | null
+          ip_address?: string | null
+          user_agent?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          salon_id?: string
+          customer_name?: string
+          customer_email?: string | null
+          customer_phone?: string | null
+          requested_date?: string
+          requested_time?: string
+          booking_date?: string
+          start_time?: string
+          end_time?: string | null
+          service_id?: number | null
+          service_name?: string
+          service_duration?: number
+          service_price?: number
+          team_member_id?: string | null
+          status?: string | null
+          notes?: string | null
+          ip_address?: string | null
+          user_agent?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "online_bookings_salon_id_fkey"
+            columns: ["salon_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["salon_id"]
+          },
+          {
+            foreignKeyName: "online_bookings_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "online_bookings_team_member_id_fkey"
+            columns: ["team_member_id"]
+            isOneToOne: false
+            referencedRelation: "team"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      orders: {
+        Row: {
+          id: string
+          user_id: string
+          nome: string
+          telefono: string | null
+          email: string | null
+          data: string
+          orarioInizio: string
+          orarioFine: string | null
+          prezzo: number
+          note: string | null
+          status: string
+          descrizione: string | null
+          team_id: string | null
+          customer_uuid: string | null
+          salon_id: string
+          created_at: string | null
+          color_card: string[] | null
+          prefer_card_style: string | null
+          alone: string | null
+          booking_source: string | null
+        }
+        Insert: {
+          id?: string
+          user_id?: string
+          nome: string
+          telefono?: string | null
+          email?: string | null
+          data: string
+          orarioInizio: string
+          orarioFine?: string | null
+          prezzo: number
+          note?: string | null
+          status?: string
+          descrizione?: string | null
+          team_id?: string | null
+          customer_uuid?: string | null
+          salon_id: string
+          created_at?: string | null
+          color_card?: string[] | null
+          prefer_card_style?: string | null
+          alone?: string | null
+          booking_source?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          nome?: string
+          telefono?: string | null
+          email?: string | null
+          data?: string
+          orarioInizio?: string
+          orarioFine?: string | null
+          prezzo?: number
+          note?: string | null
+          status?: string
+          descrizione?: string | null
+          team_id?: string | null
+          customer_uuid?: string | null
+          salon_id?: string
+          created_at?: string | null
+          color_card?: string[] | null
+          prefer_card_style?: string | null
+          alone?: string | null
+          booking_source?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_salon_id_fkey"
+            columns: ["salon_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["salon_id"]
+          },
+          {
+            foreignKeyName: "orders_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "team"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      services: {
+        Row: {
+          id: number
+          user_id: string
+          salon_id: string
+          name: string
+          category: string | null
+          description: string | null
+          price: number
+          discounted_price: number | null
+          iva_included: boolean | null
+          duration: number
+          buffer_after: number | null
+          buffer_before: number | null
+          max_clients: number | null
+          team_members: string[] | null
+          visible_online: boolean | null
+          require_manual_confirm: boolean | null
+          tags: string[] | null
+          internal_notes: string | null
+          status: string
+          promo: boolean | null
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: number
+          user_id: string
+          salon_id: string
+          name: string
+          category?: string | null
+          description?: string | null
+          price: number
+          discounted_price?: number | null
+          iva_included?: boolean | null
+          duration: number
+          buffer_after?: number | null
+          buffer_before?: number | null
+          max_clients?: number | null
+          team_members?: string[] | null
+          visible_online?: boolean | null
+          require_manual_confirm?: boolean | null
+          tags?: string[] | null
+          internal_notes?: string | null
+          status: string
+          promo?: boolean | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: number
+          user_id?: string
+          salon_id?: string
+          name?: string
+          category?: string | null
+          description?: string | null
+          price?: number
+          discounted_price?: number | null
+          iva_included?: boolean | null
+          duration?: number
+          buffer_after?: number | null
+          buffer_before?: number | null
+          max_clients?: number | null
+          team_members?: string[] | null
+          visible_online?: boolean | null
+          require_manual_confirm?: boolean | null
+          tags?: string[] | null
+          internal_notes?: string | null
+          status?: string
+          promo?: boolean | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "services_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "services_salon_id_fkey"
+            columns: ["salon_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["salon_id"]
+          }
+        ]
+      }
+      online_booking_settings: {
+        Row: {
+          id: string
+          salon_id: string
+          enabled: boolean
+          require_approval: boolean
+          auto_confirm: boolean
+          min_notice_hours: number
+          max_days_ahead: number
+          slot_duration: number
+          booking_start_time: string
+          booking_end_time: string
+          allow_same_day_booking: boolean
+          max_bookings_per_day: number
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          salon_id: string
+          enabled?: boolean
+          require_approval?: boolean
+          auto_confirm?: boolean
+          min_notice_hours?: number
+          max_days_ahead?: number
+          slot_duration?: number
+          booking_start_time?: string
+          booking_end_time?: string
+          allow_same_day_booking?: boolean
+          max_bookings_per_day?: number
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          salon_id?: string
+          enabled?: boolean
+          require_approval?: boolean
+          auto_confirm?: boolean
+          min_notice_hours?: number
+          max_days_ahead?: number
+          slot_duration?: number
+          booking_start_time?: string
+          booking_end_time?: string
+          allow_same_day_booking?: boolean
+          max_bookings_per_day?: number
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "online_booking_settings_salon_id_fkey"
+            columns: ["salon_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["salon_id"]
+          }
+        ]
+      }
+      salon_web_settings: {
+        Row: {
+          id: string
+          salon_id: string
+          web_enabled: boolean
+          web_domain: string | null
+          web_subdomain: string | null
+          web_title: string | null
+          web_description: string | null
+          web_logo_url: string | null
+          web_theme: string
+          web_primary_color: string
+          web_secondary_color: string
+          web_contact_email: string | null
+          web_contact_phone: string | null
+          web_address: string | null
+          web_social_facebook: string | null
+          web_social_instagram: string | null
+          web_social_twitter: string | null
+          web_google_analytics_id: string | null
+          web_meta_title: string | null
+          web_meta_description: string | null
+          web_meta_keywords: string | null
+          web_og_image_url: string | null
+          web_favicon_url: string | null
+          web_custom_css: string | null
+          web_custom_js: string | null
+          web_booking_enabled: boolean
+          web_services_visible: boolean
+          web_team_visible: boolean
+          web_gallery_visible: boolean
+          web_testimonials_visible: boolean
+          web_contact_form_enabled: boolean
+          web_layout_type: string | null
+          web_subtitle: string | null
+          web_title_color: string | null
+          web_subtitle_color: string | null
+          web_text_color: string | null
+          web_salon_name_color: string | null
+          web_right_section_enabled: boolean | null
+          web_studio_text: string | null
+          web_salon_name_font_size: string | null
+          web_subtitle_font_size: string | null
+          web_title_font_family: string | null
+          web_subtitle_font_family: string | null
+          web_description_color: string | null
+          web_description_font_family: string | null
+          web_button_size: string | null
+          web_button_border_radius: string | null
+          web_button_color: string | null
+          web_button_border_color: string | null
+          web_button_border_width: string | null
+          web_button_type: string | null
+          web_button_quantity: number | null
+          web_button_primary_text: string | null
+          web_button_secondary_text: string | null
+          web_studio_text_font_size: string | null
+          web_description_font_size: string | null
+          web_carousel_enabled: boolean | null
+          web_carousel_autoplay: boolean | null
+          web_carousel_speed: number | null
+          web_carousel_display_mode: string | null
+          web_carousel_image_1: string | null
+          web_carousel_image_2: string | null
+          web_carousel_image_3: string | null
+          web_carousel_image_4: string | null
+          web_carousel_image_5: string | null
+          web_carousel_image_6: string | null
+          web_title_bold: boolean | null
+          web_subtitle_bold: boolean | null
+          web_description_bold: boolean | null
+          web_studio_text_bold: boolean | null
+          web_footer_background_color: string | null
+          web_footer_text_color: string | null
+          web_footer_title_color: string | null
+          web_footer_subtitle_color: string | null
+          web_footer_description_color: string | null
+          web_footer_link_color: string | null
+          web_footer_link_hover_color: string | null
+          web_footer_border_color: string | null
+          web_footer_social_icon_color: string | null
+          web_footer_social_icon_hover_color: string | null
+          web_footer_title_font_family: string | null
+          web_footer_subtitle_font_family: string | null
+          web_footer_description_font_family: string | null
+          web_footer_title_font_size: string | null
+          web_footer_subtitle_font_size: string | null
+          web_footer_description_font_size: string | null
+          web_footer_title_bold: boolean | null
+          web_footer_subtitle_bold: boolean | null
+          web_footer_description_bold: boolean | null
+          web_footer_copyright_text: string | null
+          web_footer_copyright_color: string | null
+          web_footer_copyright_font_size: string | null
+          web_footer_copyright_font_family: string | null
+          web_footer_show_social_links: boolean | null
+          web_footer_show_contact_info: boolean | null
+          web_footer_show_copyright: boolean | null
+          web_footer_layout_style: string | null
+          web_footer_padding_top: string | null
+          web_footer_padding_bottom: string | null
+          web_footer_margin_top: string | null
+          web_footer_border_top_width: string | null
+          web_footer_border_top_style: string | null
+          web_footer_border_top_color: string | null
+          web_footer_border_radius: string | null
+          web_footer_shadow: string | null
+          web_footer_opacity: string | null
+          web_footer_backdrop_blur: string | null
+          web_footer_gradient_enabled: boolean | null
+          web_footer_gradient_from_color: string | null
+          web_footer_gradient_to_color: string | null
+          web_footer_gradient_direction: string | null
+          web_footer_pattern_enabled: boolean | null
+          web_footer_pattern_opacity: string | null
+          web_footer_pattern_color: string | null
+          web_footer_pattern_size: string | null
+          web_footer_pattern_type: string | null
+          web_button_text_color: string | null
+          web_button_transparent: boolean | null
+          web_gallery_enabled: boolean | null
+          web_gallery_title: string | null
+          web_gallery_title_enabled: boolean | null
+          web_gallery_subtitle: string | null
+          web_gallery_image_1: string | null
+          web_gallery_image_2: string | null
+          web_gallery_image_3: string | null
+          web_gallery_image_4: string | null
+          web_gallery_image_5: string | null
+          web_gallery_image_6: string | null
+          web_gallery_image_7: string | null
+          web_gallery_image_8: string | null
+          web_gallery_full_width: boolean | null
+          web_carousel_visible: boolean | null
+          web_map_visible: boolean | null
+          web_opening_hours_visible: boolean | null
+          web_profile_photo_url: string | null
+          web_layout_style: string | null
+          web_header_style: string | null
+          web_footer_style: string | null
+          web_animation_enabled: boolean | null
+          web_parallax_enabled: boolean | null
+          web_parallax_image: string | null
+          web_parallax_speed: number | null
+          web_parallax_opacity: number | null
+          web_parallax_sections: string[] | null
+          web_dark_mode_enabled: boolean | null
+          web_show_search: boolean | null
+          web_show_breadcrumbs: boolean | null
+          web_show_social_share: boolean | null
+          web_show_back_to_top: boolean | null
+          web_show_loading_animation: boolean | null
+          web_custom_font: string | null
+          web_font_size: string | null
+          web_line_height: string | null
+          web_spacing: string | null
+          web_border_radius: string | null
+          web_shadow_style: string | null
+          web_transition_speed: string | null
+          web_map_badge_text: string | null
+          web_map_title: string | null
+          web_map_subtitle: string | null
+          web_map_opening_hours: string | null
+          web_map_call_button_text: string | null
+          web_map_button_color: string | null
+          web_map_button_text_color: string | null
+          web_map_button_border_color: string | null
+          web_map_button_border_width: string | null
+          web_map_button_transparent: boolean | null
+          web_map_button_size: string | null
+          web_map_button_border_radius: string | null
+          web_opening_hours_button_text: string | null
+          web_opening_hours_button_action: string | null
+          web_opening_hours_button_color: string | null
+          web_opening_hours_button_text_color: string | null
+          web_opening_hours_button_border_color: string | null
+          web_opening_hours_button_border_width: string | null
+          web_opening_hours_button_border_radius: string | null
+          web_opening_hours_button_size: string | null
+          web_opening_hours_button_transparent: boolean | null
+          web_booking_section_background_color: string | null
+          web_booking_section_card_background: string | null
+          web_booking_section_title: string | null
+          web_booking_section_subtitle: string | null
+          web_booking_section_badge_text: string | null
+          web_booking_section_title_color: string | null
+          web_booking_section_subtitle_color: string | null
+          web_booking_section_badge_background: string | null
+          web_booking_section_badge_text_color: string | null
+          web_booking_section_card_border_color: string | null
+          web_booking_section_card_shadow: string | null
+          web_navbar_logo_url: string | null
+          web_navbar_title: string | null
+          web_navbar_subtitle: string | null
+          web_navbar_studio_text: string | null
+          web_navbar_show_phone: boolean | null
+          web_navbar_show_booking: boolean | null
+          web_navbar_phone_text: string | null
+          web_navbar_booking_text: string | null
+          web_navbar_phone_action: string | null
+          web_navbar_booking_action: string | null
+          web_navbar_background_color: string | null
+          web_navbar_text_color: string | null
+          web_navbar_subtitle_color: string | null
+          web_navbar_phone_button_background: string | null
+          web_navbar_phone_button_text_color: string | null
+          web_navbar_phone_button_border_color: string | null
+          web_navbar_booking_button_background: string | null
+          web_navbar_booking_button_text_color: string | null
+          web_navbar_booking_button_border_color: string | null
+          web_hero_button_1_action: string | null
+          web_hero_button_2_action: string | null
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          salon_id: string
+          web_enabled?: boolean
+          web_domain?: string | null
+          web_subdomain?: string | null
+          web_title?: string | null
+          web_description?: string | null
+          web_logo_url?: string | null
+          web_theme?: string
+          web_primary_color?: string
+          web_secondary_color?: string
+          web_contact_email?: string | null
+          web_contact_phone?: string | null
+          web_address?: string | null
+          web_social_facebook?: string | null
+          web_social_instagram?: string | null
+          web_social_twitter?: string | null
+          web_google_analytics_id?: string | null
+          web_meta_title?: string | null
+          web_meta_description?: string | null
+          web_meta_keywords?: string | null
+          web_og_image_url?: string | null
+          web_favicon_url?: string | null
+          web_custom_css?: string | null
+          web_custom_js?: string | null
+          web_booking_enabled?: boolean
+          web_services_visible?: boolean
+          web_team_visible?: boolean
+          web_gallery_visible?: boolean
+          web_testimonials_visible?: boolean
+          web_contact_form_enabled?: boolean
+          web_layout_type?: string | null
+          web_subtitle?: string | null
+          web_title_color?: string | null
+          web_subtitle_color?: string | null
+          web_text_color?: string | null
+          web_salon_name_color?: string | null
+          web_right_section_enabled?: boolean | null
+          web_studio_text?: string | null
+          web_salon_name_font_size?: string | null
+          web_subtitle_font_size?: string | null
+          web_title_font_family?: string | null
+          web_subtitle_font_family?: string | null
+          web_description_color?: string | null
+          web_description_font_family?: string | null
+          web_button_size?: string | null
+          web_button_border_radius?: string | null
+          web_button_color?: string | null
+          web_button_border_color?: string | null
+          web_button_border_width?: string | null
+          web_button_type?: string | null
+          web_button_quantity?: number | null
+          web_button_primary_text?: string | null
+          web_button_secondary_text?: string | null
+          web_studio_text_font_size?: string | null
+          web_description_font_size?: string | null
+          web_carousel_enabled?: boolean | null
+          web_carousel_autoplay?: boolean | null
+          web_carousel_speed?: number | null
+          web_carousel_display_mode?: string | null
+          web_carousel_image_1?: string | null
+          web_carousel_image_2?: string | null
+          web_carousel_image_3?: string | null
+          web_carousel_image_4?: string | null
+          web_carousel_image_5?: string | null
+          web_carousel_image_6?: string | null
+          web_title_bold?: boolean | null
+          web_subtitle_bold?: boolean | null
+          web_description_bold?: boolean | null
+          web_studio_text_bold?: boolean | null
+          web_footer_background_color?: string | null
+          web_footer_text_color?: string | null
+          web_footer_title_color?: string | null
+          web_footer_subtitle_color?: string | null
+          web_footer_description_color?: string | null
+          web_footer_link_color?: string | null
+          web_footer_link_hover_color?: string | null
+          web_footer_border_color?: string | null
+          web_footer_social_icon_color?: string | null
+          web_footer_social_icon_hover_color?: string | null
+          web_footer_title_font_family?: string | null
+          web_footer_subtitle_font_family?: string | null
+          web_footer_description_font_family?: string | null
+          web_footer_title_font_size?: string | null
+          web_footer_subtitle_font_size?: string | null
+          web_footer_description_font_size?: string | null
+          web_footer_title_bold?: boolean | null
+          web_footer_subtitle_bold?: boolean | null
+          web_footer_description_bold?: boolean | null
+          web_footer_copyright_text?: string | null
+          web_footer_copyright_color?: string | null
+          web_footer_copyright_font_size?: string | null
+          web_footer_copyright_font_family?: string | null
+          web_footer_show_social_links?: boolean | null
+          web_footer_show_contact_info?: boolean | null
+          web_footer_show_copyright?: boolean | null
+          web_footer_layout_style?: string | null
+          web_footer_padding_top?: string | null
+          web_footer_padding_bottom?: string | null
+          web_footer_margin_top?: string | null
+          web_footer_border_top_width?: string | null
+          web_footer_border_top_style?: string | null
+          web_footer_border_top_color?: string | null
+          web_footer_border_radius?: string | null
+          web_footer_shadow?: string | null
+          web_footer_opacity?: string | null
+          web_footer_backdrop_blur?: string | null
+          web_footer_gradient_enabled?: boolean | null
+          web_footer_gradient_from_color?: string | null
+          web_footer_gradient_to_color?: string | null
+          web_footer_gradient_direction?: string | null
+          web_footer_pattern_enabled?: boolean | null
+          web_footer_pattern_opacity?: string | null
+          web_footer_pattern_color?: string | null
+          web_footer_pattern_size?: string | null
+          web_footer_pattern_type?: string | null
+          web_button_text_color?: string | null
+          web_button_transparent?: boolean | null
+          web_gallery_enabled?: boolean | null
+          web_gallery_title?: string | null
+          web_gallery_title_enabled?: boolean | null
+          web_gallery_subtitle?: string | null
+          web_gallery_image_1?: string | null
+          web_gallery_image_2?: string | null
+          web_gallery_image_3?: string | null
+          web_gallery_image_4?: string | null
+          web_gallery_image_5?: string | null
+          web_gallery_image_6?: string | null
+          web_gallery_image_7?: string | null
+          web_gallery_image_8?: string | null
+          web_gallery_full_width?: boolean | null
+          web_carousel_visible?: boolean | null
+          web_map_visible?: boolean | null
+          web_opening_hours_visible?: boolean | null
+          web_profile_photo_url?: string | null
+          web_layout_style?: string | null
+          web_header_style?: string | null
+          web_footer_style?: string | null
+          web_animation_enabled?: boolean | null
+          web_parallax_enabled?: boolean | null
+          web_parallax_image?: string | null
+          web_parallax_speed?: number | null
+          web_parallax_opacity?: number | null
+          web_parallax_sections?: string[] | null
+          web_dark_mode_enabled?: boolean | null
+          web_show_search?: boolean | null
+          web_show_breadcrumbs?: boolean | null
+          web_show_social_share?: boolean | null
+          web_show_back_to_top?: boolean | null
+          web_show_loading_animation?: boolean | null
+          web_custom_font?: string | null
+          web_font_size?: string | null
+          web_line_height?: string | null
+          web_spacing?: string | null
+          web_border_radius?: string | null
+          web_shadow_style?: string | null
+          web_transition_speed?: string | null
+          web_map_badge_text?: string | null
+          web_map_title?: string | null
+          web_map_subtitle?: string | null
+          web_map_opening_hours?: string | null
+          web_map_call_button_text?: string | null
+          web_map_button_color?: string | null
+          web_map_button_text_color?: string | null
+          web_map_button_border_color?: string | null
+          web_map_button_border_width?: string | null
+          web_map_button_transparent?: boolean | null
+          web_map_button_size?: string | null
+          web_map_button_border_radius?: string | null
+          web_opening_hours_button_text?: string | null
+          web_opening_hours_button_action?: string | null
+          web_opening_hours_button_color?: string | null
+          web_opening_hours_button_text_color?: string | null
+          web_opening_hours_button_border_color?: string | null
+          web_opening_hours_button_border_width?: string | null
+          web_opening_hours_button_border_radius?: string | null
+          web_opening_hours_button_size?: string | null
+          web_opening_hours_button_transparent?: boolean | null
+          web_booking_section_background_color?: string | null
+          web_booking_section_card_background?: string | null
+          web_booking_section_title?: string | null
+          web_booking_section_subtitle?: string | null
+          web_booking_section_badge_text?: string | null
+          web_booking_section_title_color?: string | null
+          web_booking_section_subtitle_color?: string | null
+          web_booking_section_badge_background?: string | null
+          web_booking_section_badge_text_color?: string | null
+          web_booking_section_card_border_color?: string | null
+          web_booking_section_card_shadow?: string | null
+          web_navbar_logo_url?: string | null
+          web_navbar_title?: string | null
+          web_navbar_subtitle?: string | null
+          web_navbar_studio_text?: string | null
+          web_navbar_show_phone?: boolean | null
+          web_navbar_show_booking?: boolean | null
+          web_navbar_phone_text?: string | null
+          web_navbar_booking_text?: string | null
+          web_navbar_phone_action?: string | null
+          web_navbar_booking_action?: string | null
+          web_navbar_background_color?: string | null
+          web_navbar_text_color?: string | null
+          web_navbar_subtitle_color?: string | null
+          web_navbar_phone_button_background?: string | null
+          web_navbar_phone_button_text_color?: string | null
+          web_navbar_phone_button_border_color?: string | null
+          web_navbar_booking_button_background?: string | null
+          web_navbar_booking_button_text_color?: string | null
+          web_navbar_booking_button_border_color?: string | null
+          web_hero_button_1_action?: string | null
+          web_hero_button_2_action?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          salon_id?: string
+          web_enabled?: boolean
+          web_domain?: string | null
+          web_subdomain?: string | null
+          web_title?: string | null
+          web_description?: string | null
+          web_logo_url?: string | null
+          web_theme?: string
+          web_primary_color?: string
+          web_secondary_color?: string
+          web_contact_email?: string | null
+          web_contact_phone?: string | null
+          web_address?: string | null
+          web_social_facebook?: string | null
+          web_social_instagram?: string | null
+          web_social_twitter?: string | null
+          web_google_analytics_id?: string | null
+          web_meta_title?: string | null
+          web_meta_description?: string | null
+          web_meta_keywords?: string | null
+          web_og_image_url?: string | null
+          web_favicon_url?: string | null
+          web_custom_css?: string | null
+          web_custom_js?: string | null
+          web_booking_enabled?: boolean
+          web_services_visible?: boolean
+          web_team_visible?: boolean
+          web_gallery_visible?: boolean
+          web_testimonials_visible?: boolean
+          web_contact_form_enabled?: boolean
+          web_layout_type?: string | null
+          web_subtitle?: string | null
+          web_title_color?: string | null
+          web_subtitle_color?: string | null
+          web_text_color?: string | null
+          web_salon_name_color?: string | null
+          web_right_section_enabled?: boolean | null
+          web_studio_text?: string | null
+          web_salon_name_font_size?: string | null
+          web_subtitle_font_size?: string | null
+          web_title_font_family?: string | null
+          web_subtitle_font_family?: string | null
+          web_description_color?: string | null
+          web_description_font_family?: string | null
+          web_button_size?: string | null
+          web_button_border_radius?: string | null
+          web_button_color?: string | null
+          web_button_border_color?: string | null
+          web_button_border_width?: string | null
+          web_button_type?: string | null
+          web_button_quantity?: number | null
+          web_button_primary_text?: string | null
+          web_button_secondary_text?: string | null
+          web_studio_text_font_size?: string | null
+          web_description_font_size?: string | null
+          web_carousel_enabled?: boolean | null
+          web_carousel_autoplay?: boolean | null
+          web_carousel_speed?: number | null
+          web_carousel_display_mode?: string | null
+          web_carousel_image_1?: string | null
+          web_carousel_image_2?: string | null
+          web_carousel_image_3?: string | null
+          web_carousel_image_4?: string | null
+          web_carousel_image_5?: string | null
+          web_carousel_image_6?: string | null
+          web_title_bold?: boolean | null
+          web_subtitle_bold?: boolean | null
+          web_description_bold?: boolean | null
+          web_studio_text_bold?: boolean | null
+          web_footer_background_color?: string | null
+          web_footer_text_color?: string | null
+          web_footer_title_color?: string | null
+          web_footer_subtitle_color?: string | null
+          web_footer_description_color?: string | null
+          web_footer_link_color?: string | null
+          web_footer_link_hover_color?: string | null
+          web_footer_border_color?: string | null
+          web_footer_social_icon_color?: string | null
+          web_footer_social_icon_hover_color?: string | null
+          web_footer_title_font_family?: string | null
+          web_footer_subtitle_font_family?: string | null
+          web_footer_description_font_family?: string | null
+          web_footer_title_font_size?: string | null
+          web_footer_subtitle_font_size?: string | null
+          web_footer_description_font_size?: string | null
+          web_footer_title_bold?: boolean | null
+          web_footer_subtitle_bold?: boolean | null
+          web_footer_description_bold?: boolean | null
+          web_footer_copyright_text?: string | null
+          web_footer_copyright_color?: string | null
+          web_footer_copyright_font_size?: string | null
+          web_footer_copyright_font_family?: string | null
+          web_footer_show_social_links?: boolean | null
+          web_footer_show_contact_info?: boolean | null
+          web_footer_show_copyright?: boolean | null
+          web_footer_layout_style?: string | null
+          web_footer_padding_top?: string | null
+          web_footer_padding_bottom?: string | null
+          web_footer_margin_top?: string | null
+          web_footer_border_top_width?: string | null
+          web_footer_border_top_style?: string | null
+          web_footer_border_top_color?: string | null
+          web_footer_border_radius?: string | null
+          web_footer_shadow?: string | null
+          web_footer_opacity?: string | null
+          web_footer_backdrop_blur?: string | null
+          web_footer_gradient_enabled?: boolean | null
+          web_footer_gradient_from_color?: string | null
+          web_footer_gradient_to_color?: string | null
+          web_footer_gradient_direction?: string | null
+          web_footer_pattern_enabled?: boolean | null
+          web_footer_pattern_opacity?: string | null
+          web_footer_pattern_color?: string | null
+          web_footer_pattern_size?: string | null
+          web_footer_pattern_type?: string | null
+          web_button_text_color?: string | null
+          web_button_transparent?: boolean | null
+          web_gallery_enabled?: boolean | null
+          web_gallery_title?: string | null
+          web_gallery_title_enabled?: boolean | null
+          web_gallery_subtitle?: string | null
+          web_gallery_image_1?: string | null
+          web_gallery_image_2?: string | null
+          web_gallery_image_3?: string | null
+          web_gallery_image_4?: string | null
+          web_gallery_image_5?: string | null
+          web_gallery_image_6?: string | null
+          web_gallery_image_7?: string | null
+          web_gallery_image_8?: string | null
+          web_gallery_full_width?: boolean | null
+          web_carousel_visible?: boolean | null
+          web_map_visible?: boolean | null
+          web_opening_hours_visible?: boolean | null
+          web_profile_photo_url?: string | null
+          web_layout_style?: string | null
+          web_header_style?: string | null
+          web_footer_style?: string | null
+          web_animation_enabled?: boolean | null
+          web_parallax_enabled?: boolean | null
+          web_parallax_image?: string | null
+          web_parallax_speed?: number | null
+          web_parallax_opacity?: number | null
+          web_parallax_sections?: string[] | null
+          web_dark_mode_enabled?: boolean | null
+          web_show_search?: boolean | null
+          web_show_breadcrumbs?: boolean | null
+          web_show_social_share?: boolean | null
+          web_show_back_to_top?: boolean | null
+          web_show_loading_animation?: boolean | null
+          web_custom_font?: string | null
+          web_font_size?: string | null
+          web_line_height?: string | null
+          web_spacing?: string | null
+          web_border_radius?: string | null
+          web_shadow_style?: string | null
+          web_transition_speed?: string | null
+          web_map_badge_text?: string | null
+          web_map_title?: string | null
+          web_map_subtitle?: string | null
+          web_map_opening_hours?: string | null
+          web_map_call_button_text?: string | null
+          web_map_button_color?: string | null
+          web_map_button_text_color?: string | null
+          web_map_button_border_color?: string | null
+          web_map_button_border_width?: string | null
+          web_map_button_transparent?: boolean | null
+          web_map_button_size?: string | null
+          web_map_button_border_radius?: string | null
+          web_opening_hours_button_text?: string | null
+          web_opening_hours_button_action?: string | null
+          web_opening_hours_button_color?: string | null
+          web_opening_hours_button_text_color?: string | null
+          web_opening_hours_button_border_color?: string | null
+          web_opening_hours_button_border_width?: string | null
+          web_opening_hours_button_border_radius?: string | null
+          web_opening_hours_button_size?: string | null
+          web_opening_hours_button_transparent?: boolean | null
+          web_booking_section_background_color?: string | null
+          web_booking_section_card_background?: string | null
+          web_booking_section_title?: string | null
+          web_booking_section_subtitle?: string | null
+          web_booking_section_badge_text?: string | null
+          web_booking_section_title_color?: string | null
+          web_booking_section_subtitle_color?: string | null
+          web_booking_section_badge_background?: string | null
+          web_booking_section_badge_text_color?: string | null
+          web_booking_section_card_border_color?: string | null
+          web_booking_section_card_shadow?: string | null
+          web_navbar_logo_url?: string | null
+          web_navbar_title?: string | null
+          web_navbar_subtitle?: string | null
+          web_navbar_studio_text?: string | null
+          web_navbar_show_phone?: boolean | null
+          web_navbar_show_booking?: boolean | null
+          web_navbar_phone_text?: string | null
+          web_navbar_booking_text?: string | null
+          web_navbar_phone_action?: string | null
+          web_navbar_booking_action?: string | null
+          web_navbar_background_color?: string | null
+          web_navbar_text_color?: string | null
+          web_navbar_subtitle_color?: string | null
+          web_navbar_phone_button_background?: string | null
+          web_navbar_phone_button_text_color?: string | null
+          web_navbar_phone_button_border_color?: string | null
+          web_navbar_booking_button_background?: string | null
+          web_navbar_booking_button_text_color?: string | null
+          web_navbar_booking_button_border_color?: string | null
+          web_hero_button_1_action?: string | null
+          web_hero_button_2_action?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "salon_web_settings_salon_id_fkey"
+            columns: ["salon_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["salon_id"]
+          }
+        ]
+      }
+      salon_galleries: {
+        Row: {
+          id: string
+          salon_id: string
+          title: string
+          description: string | null
+          image_url: string
+          image_alt: string | null
+          category: string | null
+          sort_order: number
+          is_active: boolean
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          salon_id: string
+          title: string
+          description?: string | null
+          image_url: string
+          image_alt?: string | null
+          category?: string | null
+          sort_order?: number
+          is_active?: boolean
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          salon_id?: string
+          title?: string
+          description?: string | null
+          image_url?: string
+          image_alt?: string | null
+          category?: string | null
+          sort_order?: number
+          is_active?: boolean
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "salon_galleries_salon_id_fkey"
+            columns: ["salon_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["salon_id"]
+          }
+        ]
+      }
+      salon_testimonials: {
+        Row: {
+          id: string
+          salon_id: string
+          client_name: string
+          client_email: string | null
+          rating: number
+          comment: string
+          service_name: string | null
+          is_approved: boolean
+          is_featured: boolean
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          salon_id: string
+          client_name: string
+          client_email?: string | null
+          rating: number
+          comment: string
+          service_name?: string | null
+          is_approved?: boolean
+          is_featured?: boolean
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          salon_id?: string
+          client_name?: string
+          client_email?: string | null
+          rating?: number
+          comment?: string
+          service_name?: string | null
+          is_approved?: boolean
+          is_featured?: boolean
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "salon_testimonials_salon_id_fkey"
+            columns: ["salon_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["salon_id"]
+          }
+        ]
+      }
+      web_bookings: {
+        Row: {
+          id: string
+          salon_id: string
+          customer_name: string
+          customer_email: string
+          customer_phone: string | null
+          service_id: number | null
+          service_name: string | null
+          appointment_date: string
+          appointment_time: string
+          duration_minutes: number
+          total_price: number | null
+          status: string
+          notes: string | null
+          source: string
+          ip_address: string | null
+          user_agent: string | null
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          salon_id: string
+          customer_name: string
+          customer_email: string
+          customer_phone?: string | null
+          service_id?: number | null
+          service_name?: string | null
+          appointment_date: string
+          appointment_time: string
+          duration_minutes?: number
+          total_price?: number | null
+          status?: string
+          notes?: string | null
+          source?: string
+          ip_address?: string | null
+          user_agent?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          salon_id?: string
+          customer_name?: string
+          customer_email?: string
+          customer_phone?: string | null
+          service_id?: number | null
+          service_name?: string | null
+          appointment_date?: string
+          appointment_time?: string
+          duration_minutes?: number
+          total_price?: number | null
+          status?: string
+          notes?: string | null
+          source?: string
+          ip_address?: string | null
+          user_agent?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "web_bookings_salon_id_fkey"
+            columns: ["salon_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["salon_id"]
+          },
+          {
+            foreignKeyName: "web_bookings_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      web_contact_messages: {
+        Row: {
+          id: string
+          salon_id: string
+          name: string
+          email: string
+          phone: string | null
+          subject: string | null
+          message: string
+          is_read: boolean
+          is_replied: boolean
+          ip_address: string | null
+          user_agent: string | null
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          salon_id: string
+          name: string
+          email: string
+          phone?: string | null
+          subject?: string | null
+          message: string
+          is_read?: boolean
+          is_replied?: boolean
+          ip_address?: string | null
+          user_agent?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          salon_id?: string
+          name?: string
+          email?: string
+          phone?: string | null
+          subject?: string | null
+          message?: string
+          is_read?: boolean
+          is_replied?: boolean
+          ip_address?: string | null
+          user_agent?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "web_contact_messages_salon_id_fkey"
+            columns: ["salon_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["salon_id"]
+          }
+        ]
+      }
+      web_analytics: {
+        Row: {
+          id: string
+          salon_id: string
+          session_id: string
+          visitor_ip: string | null
+          page_url: string
+          referrer_url: string | null
+          user_agent: string | null
+          visit_date: string
+          visit_time: string
+          time_spent_seconds: number | null
+          is_bounce: boolean
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          salon_id: string
+          session_id: string
+          visitor_ip?: string | null
+          page_url: string
+          referrer_url?: string | null
+          user_agent?: string | null
+          visit_date: string
+          visit_time: string
+          time_spent_seconds?: number | null
+          is_bounce?: boolean
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          salon_id?: string
+          session_id?: string
+          visitor_ip?: string | null
+          page_url?: string
+          referrer_url?: string | null
+          user_agent?: string | null
+          visit_date?: string
+          visit_time?: string
+          time_spent_seconds?: number | null
+          is_bounce?: boolean
+          created_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "web_analytics_salon_id_fkey"
+            columns: ["salon_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["salon_id"]
+          }
+        ]
+      }
+      email_settings: {
+        Row: {
+          id: string
+          user_id: string
+          enabled: boolean
+          smtp_host: string
+          smtp_port: number
+          smtp_user: string
+          smtp_pass: string
+          from_email: string | null
+          from_name: string | null
+          provider: string
+          secure: boolean
+          require_tls: boolean
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          enabled?: boolean
+          smtp_host: string
+          smtp_port?: number
+          smtp_user: string
+          smtp_pass: string
+          from_email?: string | null
+          from_name?: string | null
+          provider?: string
+          secure?: boolean
+          require_tls?: boolean
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          enabled?: boolean
+          smtp_host?: string
+          smtp_port?: number
+          smtp_user?: string
+          smtp_pass?: string
+          from_email?: string | null
+          from_name?: string | null
+          provider?: string
+          secure?: boolean
+          require_tls?: boolean
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_settings_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      email_templates: {
+        Row: {
+          id: string
+          user_id: string
+          name: string
+          subject: string
+          body: string
+          template_type: string
+          is_active: boolean
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          name: string
+          subject: string
+          body: string
+          template_type: string
+          is_active?: boolean
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          name?: string
+          subject?: string
+          body?: string
+          template_type?: string
+          is_active?: boolean
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_templates_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      subscriptions: {
+        Row: {
+          id: string
+          user_id: string
+          stripe_subscription_id: string
+          stripe_customer_id: string
+          status: string
+          plan_id: string
+          current_period_start: string
+          current_period_end: string
+          cancel_at_period_end: boolean
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          stripe_subscription_id: string
+          stripe_customer_id: string
+          status: string
+          plan_id: string
+          current_period_start: string
+          current_period_end: string
+          cancel_at_period_end?: boolean
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          stripe_subscription_id?: string
+          stripe_customer_id?: string
+          status?: string
+          plan_id?: string
+          current_period_start?: string
+          current_period_end?: string
+          cancel_at_period_end?: boolean
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      custom_texts: {
+        Row: {
+          id: string
+          salon_id: string
+          text_key: string
+          text_value: string
+          description: string | null
+          is_active: boolean
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          salon_id: string
+          text_key: string
+          text_value: string
+          description?: string | null
+          is_active?: boolean
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          salon_id?: string
+          text_key?: string
+          text_value?: string
+          description?: string | null
+          is_active?: boolean
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "custom_texts_salon_id_fkey"
+            columns: ["salon_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["salon_id"]
+          }
+        ]
+      }
+      working_hours: {
+        Row: {
+          id: string
+          salon_id: string
+          team_member_id: string
+          day_of_week: number
+          start_time: string
+          end_time: string
+          is_active: boolean
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          salon_id: string
+          team_member_id: string
+          day_of_week: number
+          start_time: string
+          end_time: string
+          is_active?: boolean
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          salon_id?: string
+          team_member_id?: string
+          day_of_week?: number
+          start_time?: string
+          end_time?: string
+          is_active?: boolean
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "working_hours_salon_id_fkey"
+            columns: ["salon_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["salon_id"]
+          },
+          {
+            foreignKeyName: "working_hours_team_member_id_fkey"
+            columns: ["team_member_id"]
+            isOneToOne: false
+            referencedRelation: "team"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      extra_schedules: {
+        Row: {
+          id: string
+          salon_id: string
+          team_member_id: string
+          date: string
+          start_time: string
+          end_time: string
+          is_active: boolean
+          notes: string | null
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          salon_id: string
+          team_member_id: string
+          date: string
+          start_time: string
+          end_time: string
+          is_active?: boolean
+          notes?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          salon_id?: string
+          team_member_id?: string
+          date?: string
+          start_time?: string
+          end_time?: string
+          is_active?: boolean
+          notes?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "extra_schedules_team_member_id_fkey"
+            columns: ["team_member_id"]
+            isOneToOne: false
+            referencedRelation: "team"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "extra_schedules_salon_id_fkey"
+            columns: ["salon_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["salon_id"]
+          }
+        ]
+      }
+      permissions: {
+        Row: {
+          id: string
+          user_id: string
+          permission_type: string
+          resource: string
+          is_granted: boolean
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          permission_type: string
+          resource: string
+          is_granted?: boolean
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          permission_type?: string
+          resource?: string
+          is_granted?: boolean
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "permissions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      order_details: {
+        Row: {
+          id: string
+          order_id: string
+          service_id: number
+          service_name: string
+          price: number
+          quantity: number
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          order_id: string
+          service_id: number
+          service_name: string
+          price: number
+          quantity?: number
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          order_id?: string
+          service_id?: number
+          service_name?: string
+          price?: number
+          quantity?: number
+          created_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_details_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_details_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      fatture: {
+        Row: {
+          id: string
+          salon_id: string
+          invoice_number: string
+          customer_name: string
+          customer_email: string | null
+          customer_address: string | null
+          invoice_date: string
+          due_date: string
+          total_amount: number
+          tax_amount: number
+          status: string
+          items: Json
+          notes: string | null
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          salon_id: string
+          invoice_number: string
+          customer_name: string
+          customer_email?: string | null
+          customer_address?: string | null
+          invoice_date: string
+          due_date: string
+          total_amount: number
+          tax_amount: number
+          status: string
+          items: Json
+          notes?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          salon_id?: string
+          invoice_number?: string
+          customer_name?: string
+          customer_email?: string | null
+          customer_address?: string | null
+          invoice_date?: string
+          due_date?: string
+          total_amount?: number
+          tax_amount?: number
+          status?: string
+          items?: Json
+          notes?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fatture_salon_id_fkey"
+            columns: ["salon_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["salon_id"]
+          }
+        ]
+      }
+      salon: {
+        Row: {
+          id: string
+          name: string
+          user_id: string
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          name: string
+          user_id: string
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          name?: string
+          user_id?: string
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "salon_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      team: {
+        Row: {
+          id: string
+          salon_id: string
+          user_id: string
+          name: string
+          email: string | null
+          phone_number: string | null
+          ColorMember: string | null
+          visible_users: boolean | null
+          order_column: number | null
+          role: string | null
+          is_active: boolean
+          avatar_url: string | null
+          sidebar: boolean
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          salon_id: string
+          user_id: string
+          name: string
+          email?: string | null
+          phone_number?: string | null
+          ColorMember?: string | null
+          visible_users?: boolean | null
+          order_column?: number | null
+          role?: string | null
+          is_active?: boolean
+          avatar_url?: string | null
+          sidebar?: boolean
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          salon_id?: string
+          user_id?: string
+          name?: string
+          email?: string | null
+          phone_number?: string | null
+          ColorMember?: string | null
+          visible_users?: boolean | null
+          order_column?: number | null
+          role?: string | null
+          is_active?: boolean
+          avatar_url?: string | null
+          sidebar?: boolean
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "team_salon_id_fkey"
+            columns: ["salon_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["salon_id"]
+          },
+          {
+            foreignKeyName: "team_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      appointment_notifications: {
+        Row: {
+          id: string
+          salon_id: string
+          method: 'email' | 'sms'
+          template_type: string
+          time_minutes: number
+          enabled: boolean
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          salon_id: string
+          method: 'email' | 'sms'
+          template_type: string
+          time_minutes: number
+          enabled?: boolean
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          salon_id?: string
+          method?: 'email' | 'sms'
+          template_type?: string
+          time_minutes?: number
+          enabled?: boolean
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "appointment_notifications_salon_id_fkey"
+            columns: ["salon_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["salon_id"]
+          }
+        ]
+      }
+      users: {
+        Row: {
+          id: string
+          email: string
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id: string
+          email: string
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          email?: string
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      check_slot_availability: {
+        Args: {
+          p_salon_id: string
+          p_date: string
+          p_time: string
+          p_duration: number
+          p_team_member_id?: string | null
+        }
+        Returns: boolean
+      }
+      get_available_slots: {
+        Args: {
+          p_salon_id: string
+          p_date: string
+          p_team_member_id?: string | null
+          p_slot_duration?: number | null
+        }
+        Returns: {
+          time_slot: string
+          available_members: unknown
+          total_available_members: number
+        }[]
+      }
+      add_gallery_image: {
+        Args: {
+          p_salon_id: string
+          p_title: string
+          p_description?: string | null
+          p_image_url: string
+          p_image_alt?: string | null
+          p_category?: string | null
+          p_sort_order?: number | null
+        }
+        Returns: {
+          id: string
+          salon_id: string
+          title: string
+          description: string | null
+          image_url: string
+          image_alt: string | null
+          category: string | null
+          sort_order: number
+          is_active: boolean
+          created_at: string | null
+          updated_at: string | null
+        }
+      }
+      update_gallery_image: {
+        Args: {
+          p_gallery_id: string
+          p_title?: string | null
+          p_description?: string | null
+          p_image_url?: string | null
+          p_image_alt?: string | null
+          p_category?: string | null
+          p_sort_order?: number | null
+          p_is_active?: boolean | null
+        }
+        Returns: {
+          id: string
+          salon_id: string
+          title: string
+          description: string | null
+          image_url: string
+          image_alt: string | null
+          category: string | null
+          sort_order: number
+          is_active: boolean
+          created_at: string | null
+          updated_at: string | null
+        }
+      }
+      delete_gallery_image: {
+        Args: {
+          p_gallery_id: string
+        }
+        Returns: boolean
+      }
+      add_testimonial: {
+        Args: {
+          p_salon_id: string
+          p_client_name: string
+          p_client_email?: string | null
+          p_rating: number
+          p_comment: string
+          p_service_name?: string | null
+        }
+        Returns: {
+          id: string
+          salon_id: string
+          client_name: string
+          client_email: string | null
+          rating: number
+          comment: string
+          service_name: string | null
+          is_approved: boolean
+          is_featured: boolean
+          created_at: string | null
+          updated_at: string | null
+        }
+      }
+      approve_testimonial: {
+        Args: {
+          p_testimonial_id: string
+          p_is_approved?: boolean | null
+          p_is_featured?: boolean | null
+        }
+        Returns: {
+          id: string
+          salon_id: string
+          client_name: string
+          client_email: string | null
+          rating: number
+          comment: string
+          service_name: string | null
+          is_approved: boolean
+          is_featured: boolean
+          created_at: string | null
+          updated_at: string | null
+        }
+      }
+      delete_testimonial: {
+        Args: {
+          p_testimonial_id: string
+        }
+        Returns: boolean
+      }
+      record_page_visit: {
+        Args: {
+          p_salon_id: string
+          p_session_id: string
+          p_visitor_ip?: string | null
+          p_page_url: string
+          p_referrer_url?: string | null
+          p_user_agent?: string | null
+          p_visit_date: string
+          p_visit_time: string
+          p_time_spent_seconds?: number | null
+          p_is_bounce?: boolean | null
+        }
+        Returns: {
+          id: string
+          salon_id: string
+          session_id: string
+          visitor_ip: string | null
+          page_url: string
+          referrer_url: string | null
+          user_agent: string | null
+          visit_date: string
+          visit_time: string
+          time_spent_seconds: number | null
+          is_bounce: boolean
+          created_at: string | null
+        }
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
+}
+
+type PublicSchema = Database[Extract<keyof Database, "public">]
+
+export type Tables<
+  PublicTableNameOrOptions extends
+    | keyof (PublicSchema["Tables"] & PublicSchema["Views"])
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
+        Database[PublicTableNameOrOptions["schema"]]["Views"])
+    : never = never,
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
+      Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : PublicTableNameOrOptions extends keyof (PublicSchema["Tables"] &
+        PublicSchema["Views"])
+    ? (PublicSchema["Tables"] &
+        PublicSchema["Views"])[PublicTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
+
+export type TablesInsert<
+  PublicTableNameOrOptions extends
+    | keyof PublicSchema["Tables"]
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
+    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
+
+export type TablesUpdate<
+  PublicTableNameOrOptions extends
+    | keyof PublicSchema["Tables"]
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
+    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
+
+export type Enums<
+  PublicEnumNameOrOptions extends
+    | keyof PublicSchema["Enums"]
+    | { schema: keyof Database },
+  EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = PublicEnumNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
+    ? PublicSchema["Enums"][PublicEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof PublicSchema["CompositeTypes"]
+    | { schema: keyof Database },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
+    ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never

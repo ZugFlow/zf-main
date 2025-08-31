@@ -1,0 +1,3 @@
+[submodule "components/calendar"]
+	path = components/calendar
+	url = https://github.com/Mina-Massoud/next-ui-full-calendar.git
