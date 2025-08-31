@@ -1,0 +1,686 @@
+"use client"
+
+import React, { useState, useEffect, useRef } from "react"
+import { createClient } from "@/utils/supabase/client"
+import { useRouter } from "next/navigation"
+import Image from "next/image"
+import { registerAction } from "../action"
+import Link from "next/link"
+import { FaSeedling, FaCheckCircle, FaLock, FaFacebookF, FaTwitter, FaGoogle, FaQuestionCircle, FaRocket } from "react-icons/fa"
+
+const pianoDetails = {
+  starter: {
+    nome: "Starter",
+    mensile: "€12/mese",
+    annuale: "€115,20/anno",
+    prezzoMensile: 12,
+    prezzoAnnuale: 115.2,
+  },
+  pro: {
+    nome: "PRO",
+    mensile: "€18/mese",
+    annuale: "€172,80/anno",
+    prezzoMensile: 18,
+    prezzoAnnuale: 172.8,
+  }
+}
+
+const planInfos = {
+  starter: (
+    <span>
+      <span className="font-semibold underline underline-offset-2 text-orange-600">Starter</span> include:<br />
+      <span className="block mt-1">
+        <span className="font-medium text-gray-800">• Gestione appuntamenti base</span><br />
+        <span className="font-medium text-gray-800">• Clienti illimitati</span><br />
+        <span className="font-medium text-gray-800">• Reportistica essenziale</span>
+      </span>
+      <span className="block mt-2 text-gray-500">Ideale per piccoli saloni o chi inizia.</span>
+    </span>
+  ),
+  pro: (
+    <span>
+      <span className="font-semibold underline underline-offset-2 text-orange-600">PRO</span> include:<br />
+      <span className="block mt-1">
+        <span className="font-medium text-gray-800">• Tutte le funzioni Starter</span><br />
+        <span className="font-medium text-gray-800">• Statistiche avanzate</span><br />
+        <span className="font-medium text-gray-800">• Gestione staff e servizi</span>
+      </span>
+      <span className="block mt-2 text-gray-500">Perfetto per saloni strutturati e team.</span>
+    </span>
+  )
+}
+
+const allPlanFeatures = {
+  starter: [
+    "Gestione appuntamenti base",
+    "Clienti illimitati",
+    "Reportistica essenziale",
+    "Supporto base via email",
+    "Accesso da dispositivi multipli",
+    "Backup automatici",
+  ],
+  pro: [
+    "Tutte le funzioni Starter",
+    "Statistiche avanzate",
+    "Gestione staff e servizi",
+    "Gestione magazzino",
+    "Supporto prioritario",
+    "Integrazione con Google Calendar",
+  ],
+}
+
+const RegisterPage = () => {
+  const [error, setError] = useState<string | null>(null)
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const [isTrialMode, setIsTrialMode] = useState(false)
+  const [rememberMe, setRememberMe] = useState(false)
+  const router = useRouter();
+  const supabase = createClient();
+  // Google Register Handler
+  const handleGoogleRegister = async () => {
+    setError(null);
+    setIsLoading(true);
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback?next=/crm/dashboard`,
+        },
+      });
+      if (error) {
+        setError("Errore accesso con Google. Riprova.");
+        setIsLoading(false);
+      }
+    } catch {
+      setError("Errore accesso con Google. Riprova.");
+      setIsLoading(false);
+    }
+  };
+
+  type PianoKey = keyof typeof pianoDetails
+  const [selectedPlan, setSelectedPlan] = useState<PianoKey>("starter")
+  const [selectedDurata, setSelectedDurata] = useState<"mensile" | "annuale">("mensile")
+
+  // Real-time validation state
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const [emailError, setEmailError] = useState<string | null>(null)
+  const [passwordError, setPasswordError] = useState<string | null>(null)
+
+  // Email validation regex
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  // Correzioni comuni per provider email
+  const emailCorrections: { [wrong: string]: string } = {
+    "gnail.com": "gmail.com",
+    "gamil.com": "gmail.com",
+    "gmaill.com": "gmail.com",
+    "hotnail.com": "hotmail.com",
+    "hotmai.com": "hotmail.com",
+    "hotmal.com": "hotmail.com",
+    "yaho.com": "yahoo.com",
+    "yahho.com": "yahoo.com",
+    "libero.it.com": "libero.it",
+    "outlok.com": "outlook.com",
+    "outllok.com": "outlook.com",
+    "icloud.co": "icloud.com",
+    "icloud.con": "icloud.com",
+    "gmail.it": "gmail.com"
+  }
+
+  // Real-time validation handlers
+  useEffect(() => {
+    if (email.length === 0) {
+      setEmailError(null)
+    } else if (!emailRegex.test(email)) {
+      setEmailError("Inserisci un'email valida")
+    } else {
+      // Correzione provider
+      const domain = email.split("@")[1]?.toLowerCase() || ""
+      const wrong = Object.keys(emailCorrections).find(w => domain.endsWith(w))
+      if (wrong) {
+        setEmailError(
+          `Forse intendevi ${email.replace(wrong, emailCorrections[wrong])}?`
+        )
+      } else {
+        setEmailError(null)
+      }
+    }
+  }, [email])
+
+  useEffect(() => {
+    if (confirmPassword.length === 0 && password.length === 0) {
+      setPasswordError(null)
+    } else if (password !== confirmPassword) {
+      setPasswordError("Le password non coincidono")
+    } else {
+      setPasswordError(null)
+    }
+  }, [password, confirmPassword])
+
+  useEffect(() => {
+    const trial = localStorage.getItem("trial")
+    if (trial === "true") {
+      setIsTrialMode(true)
+    }
+
+    const saved = localStorage.getItem("piano_scelto")
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved)
+        if (parsed.plan && typeof parsed.plan === "string" && parsed.plan.includes("_")) {
+          const [piano, durata] = parsed.plan.split("_")
+          if (
+            ["starter", "pro", "business"].includes(piano) &&
+            ["mensile", "annuale"].includes(durata)
+          ) {
+            setSelectedPlan(piano as PianoKey)
+            setSelectedDurata(durata as "mensile" | "annuale")
+          }
+        }
+      } catch (e) {
+        console.error("Errore parsing piano_scelto:", e)
+      }
+    }
+  }, [])
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setError(null)
+    setSuccessMessage(null)
+
+    // Final validation before submit
+    if (!emailRegex.test(email)) {
+      setEmailError("Inserisci un'email valida")
+      return
+    }
+    if (password !== confirmPassword) {
+      setPasswordError("Le password non coincidono")
+      return
+    }
+
+    setIsLoading(true)
+    const formData = new FormData(event.currentTarget)
+    const pianoCompleto = isTrialMode ? "trial" : `${selectedPlan}_${selectedDurata}`
+    formData.set("plan", pianoCompleto)
+
+    try {
+      const response = await registerAction(formData)
+
+      if (response?.error) {
+        setError(response.error)
+      } else if (response?.message) {
+        setSuccessMessage(response.message)
+        if (response.redirectTo) {
+          router.push(response.redirectTo);
+        }
+      }
+    } catch (err) {
+      console.error("Errore:", err)
+      setError("Si è verificato un errore. Riprova.")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const prezzoMensile = pianoDetails[selectedPlan].prezzoMensile
+  const prezzoAnnuale = pianoDetails[selectedPlan].prezzoAnnuale
+
+  // Tooltip state
+  const [showTooltip, setShowTooltip] = useState<"starter" | "pro" | null>(null)
+  const starterRef = useRef<HTMLButtonElement>(null)
+  const proRef = useRef<HTMLButtonElement>(null)
+
+  // Close tooltip on click outside
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (
+        showTooltip === "starter" &&
+        starterRef.current &&
+        !starterRef.current.contains(e.target as Node)
+      ) {
+        setShowTooltip(null)
+      }
+      if (
+        showTooltip === "pro" &&
+        proRef.current &&
+        !proRef.current.contains(e.target as Node)
+      ) {
+        setShowTooltip(null)
+      }
+    }
+    if (showTooltip) {
+      document.addEventListener("mousedown", handleClick)
+    }
+    return () => document.removeEventListener("mousedown", handleClick)
+  }, [showTooltip])
+
+  return (
+    <div className="h-screen bg-gradient-to-br from-orange-400 via-red-400 to-pink-400 p-1 sm:p-2">
+      <div className="h-full max-w-7xl mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col lg:flex-row">
+        {/* Left Side - Dashboard Cards & Character */}
+        <div className="flex-1 bg-gray-50 p-3 relative overflow-auto order-2 lg:order-1">
+          {/* Pricing Toggle */}
+          <div className="w-full max-w-xs mx-auto mb-6">
+            <div className="bg-gray-100 p-1 rounded-lg flex items-center justify-between">
+              <button
+                onClick={() => setSelectedDurata("mensile")}
+                className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-all ${
+                  selectedDurata === "mensile"
+                    ? "bg-white text-orange-600 shadow-sm"
+                    : "text-gray-600 hover:text-orange-600"
+                }`}
+              >
+                Mensile
+              </button>
+              <button
+                onClick={() => setSelectedDurata("annuale")}
+                className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-all flex items-center justify-center gap-1.5 ${
+                  selectedDurata === "annuale"
+                    ? "bg-white text-orange-600 shadow-sm"
+                    : "text-gray-600 hover:text-orange-600"
+                }`}
+              >
+                Annuale
+                <span className="px-1.5 py-0.5 bg-green-100 text-green-700 text-[10px] font-bold rounded">
+                  -20%
+                </span>
+              </button>
+            </div>
+          </div>
+
+          {/* Dashboard Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            {/* Piano Starter */}
+            <button
+              type="button"
+              onClick={() => setSelectedPlan("starter")}
+              className={`rounded-xl p-4 shadow-sm border transition-all duration-150 text-left focus:outline-none flex flex-col justify-between min-h-[180px] ${
+                selectedPlan === "starter"
+                  ? "border-orange-400 bg-orange-50 ring-2 ring-orange-300"
+                  : "border-gray-200 bg-white hover:border-orange-300"
+              }`}
+              aria-pressed={selectedPlan === "starter"}
+            >
+              <div>
+                <div className="flex items-center gap-2 mb-3 relative">
+                  <FaSeedling className="text-orange-500 text-2xl" />
+                  <span className="font-bold text-gray-900 text-lg">Starter</span>
+                  {/* Info Icon */}
+                  <button
+                    type="button"
+                    ref={starterRef}
+                    className="ml-1 text-orange-400 hover:text-orange-600 focus:outline-none"
+                    aria-label="Info Starter"
+                    tabIndex={0}
+                    onClick={e => {
+                      e.stopPropagation()
+                      setShowTooltip(showTooltip === "starter" ? null : "starter")
+                    }}
+                  >
+                    <FaQuestionCircle className="text-base font-bold rounded-full border border-orange-300 bg-white w-5 h-5 flex items-center justify-center" />
+                  </button>
+                  {showTooltip === "starter" && (
+                    <div className="absolute z-20 mt-2 ml-8 w-72 bg-white border border-orange-200 rounded-lg shadow-lg p-3 text-xs text-gray-700">
+                      {planInfos.starter}
+                    </div>
+                  )}
+                  {selectedPlan === "starter" && (
+                    <>
+                      <span className="ml-2 px-2 py-0.5 rounded bg-orange-100 text-orange-600 text-xs font-semibold">Selezionato</span>
+                      {/* Animated check icon */}
+                      <FaCheckCircle
+                        className="ml-1 text-green-600 text-xl animate-bounce"
+                        style={{
+                          animation: "pop-check 0.35s cubic-bezier(.68,-0.55,.27,1.55)"
+                        }}
+                      />
+                    </>
+                  )}
+                </div>
+                <ul className="text-gray-700 text-sm mb-4 space-y-1">
+                  <li>Gestione appuntamenti base</li>
+                  <li>Clienti illimitati</li>
+                  <li>Reportistica essenziale</li>
+                </ul>
+              </div>
+              <div>
+                <div className="font-bold text-orange-600 text-lg">
+                  €{selectedDurata === "mensile" ? pianoDetails.starter.prezzoMensile : (pianoDetails.starter.prezzoAnnuale / 12).toFixed(2)}/mese
+                </div>
+                {selectedDurata === "annuale" && (
+                  <div className="text-xs text-gray-500">
+                    €{pianoDetails.starter.prezzoAnnuale}/anno
+                  </div>
+                )}
+              </div>
+            </button>
+            {/* Piano PRO */}
+            <button
+              type="button"
+              onClick={() => setSelectedPlan("pro")}
+              className={`rounded-xl p-4 shadow-sm border transition-all duration-150 text-left focus:outline-none flex flex-col justify-between min-h-[180px] ${
+                selectedPlan === "pro"
+                  ? "border-orange-400 bg-orange-50 ring-2 ring-orange-300"
+                  : "border-gray-200 bg-white hover:border-orange-300"
+              }`}
+              aria-pressed={selectedPlan === "pro"}
+            >
+              <div>
+                <div className="flex items-center gap-2 mb-3 relative">
+                  <FaRocket className="text-orange-500 text-2xl" />
+                  <span className="font-bold text-gray-900 text-lg">PRO</span>
+                  {/* Info Icon */}
+                  <button
+                    type="button"
+                    ref={proRef}
+                    className="ml-1 text-orange-400 hover:text-orange-600 focus:outline-none"
+                    aria-label="Info PRO"
+                    tabIndex={0}
+                    onClick={e => {
+                      e.stopPropagation()
+                      setShowTooltip(showTooltip === "pro" ? null : "pro")
+                    }}
+                  >
+                    <FaQuestionCircle className="text-base font-bold rounded-full border border-orange-300 bg-white w-5 h-5 flex items-center justify-center" />
+                  </button>
+                  {showTooltip === "pro" && (
+                    <div className="absolute z-20 mt-2 ml-8 w-72 bg-white border border-orange-200 rounded-lg shadow-lg p-3 text-xs text-gray-700">
+                      {planInfos.pro}
+                    </div>
+                  )}
+                  {selectedPlan === "pro" && (
+                    <>
+                      <span className="ml-2 px-2 py-0.5 rounded bg-orange-100 text-orange-600 text-xs font-semibold">Selezionato</span>
+                      {/* Animated check icon */}
+                      <FaCheckCircle
+                        className="ml-1 text-green-600 text-xl animate-bounce"
+                        style={{
+                          animation: "pop-check 0.35s cubic-bezier(.68,-0.55,.27,1.55)"
+                        }}
+                      />
+                    </>
+                  )}
+                </div>
+                <ul className="text-gray-700 text-sm mb-4 space-y-1">
+                  <li>Tutte le funzioni Starter</li>
+                  <li>Statistiche avanzate</li>
+                  <li>Gestione staff e servizi</li>
+                </ul>
+              </div>
+              <div>
+                <div className="font-bold text-orange-600 text-lg">
+                  €{selectedDurata === "mensile" ? pianoDetails.pro.prezzoMensile : (pianoDetails.pro.prezzoAnnuale / 12).toFixed(2)}/mese
+                </div>
+                {selectedDurata === "annuale" && (
+                  <div className="text-xs text-gray-500">
+                    €{pianoDetails.pro.prezzoAnnuale}/anno
+                  </div>
+                )}
+              </div>
+            </button>
+          </div>
+
+          {/* Rectangle with plan features - Scrollable container */}
+          <div className="flex-1 overflow-auto pb-24">
+            <div className="w-full bg-white border-2 border-orange-200 rounded-xl p-4 mx-auto mb-4">
+              <div className="flex items-center gap-3 mb-4">
+                {selectedPlan === "starter" ? (
+                  <FaSeedling className="text-orange-500 text-2xl" />
+                ) : (
+                  <FaRocket className="text-orange-500 text-2xl" />
+                )}
+                <div>
+                  <h3 className="font-bold text-xl text-gray-900">
+                    {pianoDetails[selectedPlan].nome}
+                  </h3>
+                  <p className="text-sm text-gray-500">
+                    {selectedPlan === "starter" 
+                      ? "Perfetto per iniziare il tuo percorso"
+                      : "Ideale per far crescere il tuo business"}
+                  </p>
+                </div>
+                <span className="ml-auto px-3 py-1 rounded-full bg-orange-100 text-orange-600 text-xs font-medium">
+                  Piano selezionato
+                </span>
+              </div>
+              
+              <div className="space-y-4">
+                {allPlanFeatures[selectedPlan].map((feature, idx) => (
+                  <div key={idx} className="flex items-start gap-3">
+                    <div className="mt-1">
+                      <FaCheckCircle className="text-green-500 text-sm" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">{feature}</p>
+                      <p className="text-xs text-gray-500">
+                        {getFeatureDescription(feature)}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Plan Summary - Fixed at bottom */}
+          {!isTrialMode && (
+            <div className="sticky bottom-0 left-0 right-0 bg-white/80 backdrop-blur-sm p-2 border-t">
+              <p className="text-xs sm:text-sm text-gray-600 mb-1">Piano selezionato:</p>
+              <p className="font-bold text-orange-600">{pianoDetails[selectedPlan].nome}</p>
+              <p className="text-base sm:text-lg font-bold">
+                €{selectedDurata === "annuale" ? (prezzoAnnuale / 12).toFixed(2) : prezzoMensile.toFixed(2)}/mese
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Right Side - Registration Form */}
+        <div className="w-full max-w-md mx-auto p-3 flex flex-col h-full overflow-auto order-1 lg:order-2">
+          {/* Header */}
+          <div className="text-center mb-6 sm:mb-8">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-orange-100 to-red-100 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4">
+              <Image
+                src="/logo.png"
+                alt="ZugFlow Logo"
+                width={32}
+                height={32}
+                className="w-6 h-6 sm:w-8 sm:h-8"
+              />
+            </div>
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">Benvenuto in ZugFlow! 👋</h1>
+            <p className="text-gray-600 text-sm sm:text-base">Registrati per iniziare la tua avventura gestionale</p>
+          </div>
+
+          {/* Trial Mode Banner */}
+          {isTrialMode && (
+            <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-gradient-to-r from-orange-50 to-red-50 border border-orange-200 rounded-xl">
+              <p className="text-orange-800 text-xs sm:text-sm font-medium">🎁 14 giorni gratis</p>
+              <p className="text-orange-700 text-xs mt-1">Accesso completo senza carta di credito</p>
+            </div>
+          )}
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-2 sm:space-y-3" noValidate>
+            <div>
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">Email</label>
+              <input
+                type="email"
+                name="email"
+                placeholder="mario.rossi@esempio.it"
+                required
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                className={`w-full px-3 py-2 sm:px-4 sm:py-3 border rounded-lg focus:outline-none focus:ring-2 transition-all text-sm ${
+                  emailError ? "border-red-400 focus:ring-red-400" : "border-gray-300 focus:ring-orange-500 focus:border-transparent"
+                }`}
+              />
+              {emailError && (
+                <p className="mt-1 text-xs text-red-600">{emailError}</p>
+              )}
+            </div>
+
+            <div>
+              <div className="flex justify-between items-center mb-1 sm:mb-2">
+                <label className="block text-xs sm:text-sm font-medium text-gray-700">Password</label>
+                <Link href="/forgot-password" className="text-xs sm:text-sm text-orange-600 hover:underline">
+                  Password dimenticata?
+                </Link>
+              </div>
+              <input
+                type="password"
+                name="password"
+                placeholder="············"
+                required
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                className={`w-full px-3 py-2 sm:px-4 sm:py-3 border rounded-lg focus:outline-none focus:ring-2 transition-all text-sm ${
+                  passwordError ? "border-red-400 focus:ring-red-400" : "border-gray-300 focus:ring-orange-500 focus:border-transparent"
+                }`}
+              />
+            </div>
+
+            <div>
+              <input
+                type="password"
+                name="confirm-password"
+                placeholder="Conferma Password"
+                required
+                value={confirmPassword}
+                onChange={e => setConfirmPassword(e.target.value)}
+                className={`w-full px-3 py-2 sm:px-4 sm:py-3 border rounded-lg focus:outline-none focus:ring-2 transition-all text-sm ${
+                  passwordError ? "border-red-400 focus:ring-red-400" : "border-gray-300 focus:ring-orange-500 focus:border-transparent"
+                }`}
+              />
+              {passwordError && (
+                <p className="mt-1 text-xs text-red-600">{passwordError}</p>
+              )}
+            </div>
+
+            {/* Remember Me */}
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                id="remember"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                className="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
+              />
+              <label htmlFor="remember" className="ml-2 text-xs sm:text-sm text-gray-700">
+                Ricordami
+              </label>
+            </div>
+
+            <input type="hidden" name="plan" value={isTrialMode ? "trial" : `${selectedPlan}_${selectedDurata}`} />
+            <button
+              type="submit"
+              disabled={isLoading || !!emailError || !!passwordError}
+              className={`w-full py-2.5 sm:py-3 px-4 rounded-lg text-white font-medium transition-all ${
+                isLoading || !!emailError || !!passwordError
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 shadow-lg hover:shadow-xl"
+              } text-sm sm:text-base`}
+            >
+              {isLoading ? "Registrazione..." : "Inizia la Prova Gratuita"}
+            </button>
+            {/* Indicazione giorni prova gratuita */}
+            <div className="mt-2 text-xs text-orange-700 text-center font-semibold">
+              90 giorni di prova gratuita
+            </div>
+            {/* Termini e Privacy */}
+            <div className="mt-2 text-xs text-gray-500 text-center">
+              Registrandoti accetti i nostri{" "}
+              <Link href="/termini" className="text-orange-600 hover:underline" target="_blank">Termini</Link>
+              {" "}e{" "}
+              <Link href="/privacy" className="text-orange-600 hover:underline" target="_blank">Privacy</Link>
+            </div>
+            {/* Supporto / live chat o contatto */}
+            <div className="mt-1 text-[11px] text-center">
+              <Link href="/faq" className="text-orange-500 hover:underline" target="_blank">
+                Hai bisogno di aiuto?
+              </Link>
+            </div>
+            {/* Garanzia / rassicurazione */}
+            <div className="flex items-center justify-center mt-2">
+              <span className="text-xs text-gray-500 flex items-center gap-1">
+                <FaLock className="text-lg" />
+                Nessun addebito durante la prova &middot; Disdici in qualsiasi momento
+              </span>
+            </div>
+          </form>
+
+          {/* Errors and Success */}
+          {error && (
+            <div className="mt-3 sm:mt-4 p-2 sm:p-3 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-red-600 text-xs sm:text-sm">{error}</p>
+            </div>
+          )}
+          {successMessage && (
+            <div className="mt-3 sm:mt-4 p-2 sm:p-3 bg-green-50 border border-green-200 rounded-lg">
+              <p className="text-green-600 text-xs sm:text-sm">{successMessage}</p>
+            </div>
+          )}
+
+          {/* Sign In Link */}
+          <p className="text-center text-xs sm:text-sm text-gray-600 mt-4 sm:mt-6">
+            Hai già un account?{" "}
+            <Link href="/login" className="text-orange-600 font-medium hover:underline">
+              Accedi
+            </Link>
+          </p>
+
+          {/* Divider */}
+          <div className="flex items-center my-4 sm:my-6">
+            <div className="flex-1 border-t border-gray-300"></div>
+            <span className="px-2 sm:px-4 text-xs sm:text-sm text-gray-500">oppure</span>
+            <div className="flex-1 border-t border-gray-300"></div>
+          </div>
+
+          {/* Social Login */}
+          <div className="flex justify-center space-x-2 sm:space-x-4">
+            <button className="w-9 h-9 sm:w-10 sm:h-10 bg-blue-50 hover:bg-blue-100 rounded-lg flex items-center justify-center transition-colors" type="button">
+              <FaFacebookF className="text-blue-600 text-base sm:text-lg" />
+            </button>
+            <button className="w-9 h-9 sm:w-10 sm:h-10 bg-blue-50 hover:bg-blue-100 rounded-lg flex items-center justify-center transition-colors" type="button">
+              <FaTwitter className="text-blue-400 text-base sm:text-lg" />
+            </button>
+            <button className="w-9 h-9 sm:w-10 sm:h-10 bg-red-50 hover:bg-red-100 rounded-lg flex items-center justify-center transition-colors" type="button" onClick={handleGoogleRegister} disabled={isLoading}>
+              <FaGoogle className="text-red-500 text-base sm:text-lg" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Add animation CSS in a <style jsx global> block at the end of the file
+          (or move to your global CSS if preferred) */}
+      <style jsx global>{`
+        @keyframes pop-check {
+          0% { transform: scale(0.2); opacity: 0; }
+          60% { transform: scale(1.2); opacity: 1; }
+          100% { transform: scale(1); opacity: 1; }
+        }
+      `}</style>
+    </div>
+  )
+}
+
+const getFeatureDescription = (feature: string): string => {
+  const descriptions: { [key: string]: string } = {
+    "Gestione appuntamenti base": "Organizza facilmente il calendario e gestisci le prenotazioni dei clienti",
+    "Clienti illimitati": "Archivia e gestisci tutti i tuoi clienti senza limiti",
+    "Reportistica essenziale": "Monitora le metriche chiave del tuo business",
+    "Supporto base via email": "Assistenza entro 24 ore nei giorni lavorativi",
+    "Accesso da dispositivi multipli": "Usa l'app da smartphone, tablet o computer",
+    "Backup automatici": "I tuoi dati sono al sicuro con backup giornalieri",
+    "Tutte le funzioni Starter": "Include tutte le funzionalità del piano base",
+    "Statistiche avanzate": "Analisi dettagliate e insights per ottimizzare il business",
+    "Gestione staff e servizi": "Coordina il team e personalizza l'offerta",
+    "Gestione magazzino": "Traccia prodotti e scorte in tempo reale",
+    "Supporto prioritario": "Assistenza rapida con risposta garantita entro 4 ore",
+    "Integrazione con Google Calendar": "Sincronizzazione automatica con il tuo calendario",
+  }
+  return descriptions[feature] || ""
+}
+
+export default RegisterPage

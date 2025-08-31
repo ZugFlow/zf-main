@@ -1,0 +1,83 @@
+/* Custom styles for ChatSidebar component */
+
+.border-l-3 {
+  border-left-width: 3px;
+}
+
+/* Teams-like scrollbar styling */
+.scrollbar-teams::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-teams::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-teams::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.3);
+  border-radius: 3px;
+}
+
+.scrollbar-teams::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.5);
+}
+
+.dark .scrollbar-teams::-webkit-scrollbar-thumb {
+  background: rgba(75, 85, 99, 0.3);
+}
+
+.dark .scrollbar-teams::-webkit-scrollbar-thumb:hover {
+  background: rgba(75, 85, 99, 0.5);
+}
+
+/* Teams-like message hover effect */
+.message-hover {
+  position: relative;
+}
+
+.message-hover::before {
+  content: '';
+  position: absolute;
+  left: -8px;
+  right: -8px;
+  top: -4px;
+  bottom: -4px;
+  background-color: rgba(99, 102, 241, 0.05);
+  border-radius: 8px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.message-hover:hover::before {
+  opacity: 1;
+}
+
+/* Purple accent for Teams style */
+.accent-purple {
+  --tw-gradient-from: #8b5cf6;
+  --tw-gradient-to: #7c3aed;
+}
+
+/* Chat bubble animations */
+.chat-bubble {
+  animation: slideIn 0.2s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Focus ring for Teams style */
+.focus-ring-purple:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+  border-color: #8b5cf6;
+}

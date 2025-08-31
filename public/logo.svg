@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 17.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Livello_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="1260px" height="425.782px" viewBox="0 0 1260 425.782" enable-background="new 0 0 1260 425.782" xml:space="preserve">
+<g>
+	<defs>
+		<polyline id="SVGID_1_" points="1460,712.891 -40,712.891 -40,-287.109 1460,-287.109 		"/>
+	</defs>
+	<clipPath id="SVGID_2_">
+		<use xlink:href="#SVGID_1_"  overflow="visible"/>
+	</clipPath>
+	<g clip-path="url(#SVGID_2_)">
+		<text transform="matrix(1 0 0 1 412.0047 292.7599)" font-family="'SourceSansPro-Regular'" font-size="230.5772">ZugFlow</text>
+	</g>
+</g>
+<g>
+	<defs>
+		<path id="SVGID_3_" d="M141.8,212.891c0-121.513,31.091-203.14,60.13-203.14c29.037,0,60.129,81.627,60.129,203.14
+			s-31.092,203.14-60.129,203.14C172.891,416.031,141.8,334.404,141.8,212.891 M132.048,212.891
+			c0,104.65,26.139,212.891,69.882,212.891c43.741,0,69.879-108.241,69.879-212.891C271.809,108.242,245.671,0,201.93,0
+			C158.187,0,132.048,108.242,132.048,212.891"/>
+	</defs>
+	<clipPath id="SVGID_4_">
+		<use xlink:href="#SVGID_3_"  overflow="visible"/>
+	</clipPath>
+	
+		<linearGradient id="SVGID_5_" gradientUnits="userSpaceOnUse" x1="-40" y1="712.891" x2="-39" y2="712.891" gradientTransform="matrix(48.8608 331.7394 331.7394 -48.8608 -234358.1719 48175.582)">
+		<stop  offset="0" style="stop-color:#00EA5C"/>
+		<stop  offset="0.2716" style="stop-color:#00C2F5"/>
+		<stop  offset="0.6827" style="stop-color:#A457F7"/>
+		<stop  offset="1" style="stop-color:#FEF200"/>
+	</linearGradient>
+	<polygon clip-path="url(#SVGID_4_)" fill="url(#SVGID_5_)" points="268.841,-20.148 333.19,416.741 135.016,445.93 70.667,9.041 	
+		"/>
+</g>
+<g>
+	<defs>
+		<path id="SVGID_6_" d="M21.673,306.561c-13.389-25.766,44.706-90.994,152.529-147.026
+			c70.846-36.813,132.592-53.775,170.417-53.775c19.741,0,32.973,4.625,37.566,13.461c13.389,25.767-44.705,90.994-152.529,147.026
+			c-70.845,36.812-132.594,53.777-170.418,53.776C39.495,320.022,26.266,315.398,21.673,306.561 M169.706,150.882
+			C76.849,199.138-7.146,272.243,13.022,311.055c6.727,12.944,23.229,18.601,45.687,18.601c44.886,0,113.552-22.597,175.444-54.756
+			c92.857-48.256,176.852-121.361,156.684-160.173c-6.728-12.946-23.232-18.603-45.691-18.602
+			C300.26,96.126,231.596,118.722,169.706,150.882"/>
+	</defs>
+	<clipPath id="SVGID_7_">
+		<use xlink:href="#SVGID_6_"  overflow="visible"/>
+	</clipPath>
+	
+		<linearGradient id="SVGID_8_" gradientUnits="userSpaceOnUse" x1="-40" y1="712.891" x2="-39" y2="712.891" gradientTransform="matrix(48.8608 331.7394 331.7394 -48.8608 -234358.1719 48175.582)">
+		<stop  offset="0" style="stop-color:#00EA5C"/>
+		<stop  offset="0.2716" style="stop-color:#00C2F5"/>
+		<stop  offset="0.6827" style="stop-color:#A457F7"/>
+		<stop  offset="1" style="stop-color:#FEF200"/>
+	</linearGradient>
+	<polygon clip-path="url(#SVGID_7_)" fill="url(#SVGID_8_)" points="402.126,35.844 444.671,324.698 1.732,389.936 -40.812,101.083 
+			"/>
+</g>
+<g>
+	<defs>
+		<path id="SVGID_9_" d="M170.609,264.219c-47.02-28.693-87.69-61.339-114.517-91.924c-25.248-28.783-35.296-52.556-27.57-65.218
+			c4.491-7.36,15.221-11.125,30.803-11.125c36.894,0,100.997,21.111,173.924,65.612c47.021,28.693,87.691,61.338,114.518,91.924
+			c25.247,28.782,35.295,52.555,27.569,65.217c-4.493,7.363-15.218,11.13-30.806,11.128
+			C307.633,329.83,243.529,308.715,170.609,264.219 M20.199,101.998c-10.249,16.794-0.104,44.044,28.563,76.728
+			c27.459,31.305,68.93,64.623,116.768,93.816c63.263,38.602,134.889,66.953,179.399,66.953c18.341,0,32.081-4.815,38.73-15.712
+			c10.249-16.794,0.105-44.043-28.563-76.726c-27.459-31.306-68.928-64.624-116.768-93.817
+			c-63.263-38.602-134.89-66.954-179.4-66.952C40.587,86.289,26.848,91.103,20.199,101.998"/>
+	</defs>
+	<clipPath id="SVGID_10_">
+		<use xlink:href="#SVGID_9_"  overflow="visible"/>
+	</clipPath>
+	
+		<linearGradient id="SVGID_11_" gradientUnits="userSpaceOnUse" x1="-40" y1="712.891" x2="-39" y2="712.891" gradientTransform="matrix(48.8608 331.7394 331.7394 -48.8608 -234358.1719 48175.582)">
+		<stop  offset="0" style="stop-color:#00EA5C"/>
+		<stop  offset="0.2716" style="stop-color:#00C2F5"/>
+		<stop  offset="0.6827" style="stop-color:#A457F7"/>
+		<stop  offset="1" style="stop-color:#FEF200"/>
+	</linearGradient>
+	<polygon clip-path="url(#SVGID_10_)" fill="url(#SVGID_11_)" points="385.755,30.935 430.41,334.119 18.102,394.846 
+		-26.553,91.662 	"/>
+</g>
+</svg>

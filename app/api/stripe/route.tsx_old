@@ -1,0 +1,97 @@
+import { stripe } from "@/utils/stripe/stripe";
+import { supabaseAdmin } from "@/utils/supabase/admin";
+import { NextRequest, NextResponse } from "next/server";
+
+export async function POST(req: NextRequest) {
+  let event;
+
+  // Estrarre il corpo della richiesta
+  const body = await req.text();
+  const requestHeaders = new Headers(req.headers);
+  const sig = requestHeaders.get("stripe-signature") as string | string[];
+
+  try {
+    // Verifica dell'evento del webhook da Stripe
+    event = stripe.webhooks.constructEvent(
+      
+      body,
+      sig,
+      process.env.STRIPE_WEBHOOK_KEY ?? ""
+    );
+  } catch (err: any) {
+    console.error("Errore durante la verifica dell'evento:", err.message);
+    return NextResponse.json({ ok: false }, { status: 400 });
+  }
+  console.log("Evento webhook ricevuto:", event.type);
+
+  try {
+    // Gestire l'evento ricevuto
+    switch (event.type) {
+      case "invoice.payment_succeeded":
+        const paymentInvoiceSucceeded = event.data.object as any;
+
+        // Estrarre le informazioni necessarie dal webhook
+        const customerEmail: string = paymentInvoiceSucceeded.customer_email;
+        const customerStripeId: string = paymentInvoiceSucceeded.customer;
+        
+        if (!customerEmail) {
+          console.error("Email del cliente non trovata.");
+          return NextResponse.json({ ok: false }, { status: 400 });
+        }
+
+        // Inserire o aggiornare il cliente nella tabella subscriptions
+        const { error } = await supabaseAdmin.from("subscriptions").upsert(
+          {
+            email: customerEmail,          // Email del cliente
+            stripeid: customerStripeId,    // ID del cliente su Stripe
+            active: true                   // Stato attivo della sottoscrizione
+          },
+          { onConflict: "email" }           // Se esiste già l'email, aggiorna il record
+        );
+
+        if (error) {
+          console.error("Errore durante l'upsert della sottoscrizione:", error.message);
+          return NextResponse.json({ ok: false }, { status: 500 });
+        }
+
+        console.log(`Cliente ${customerEmail} inserito o aggiornato con successo.`);
+        break;
+
+      case "customer.subscription.deleted":
+        const customerSub = event.data.object as any;
+
+        const customerSubEmail: string = customerSub.customer_email;
+
+        if (!customerSubEmail) {
+          console.error("Email del cliente non trovata per la cancellazione dell'abbonamento.");
+          return NextResponse.json({ ok: false }, { status: 400 });
+        }
+
+        // Aggiornare lo stato dell'abbonamento a non attivo
+        const { error: errorSub } = await supabaseAdmin.from("subscriptions").upsert(
+          {
+            email: customerSubEmail,
+            stripeid: customerSub.customer,
+            active: false  // Indica che l'abbonamento è stato cancellato
+          },
+          { onConflict: "email" }
+        );
+
+        if (errorSub) {
+          console.error("Errore durante la cancellazione dell'abbonamento:", errorSub.message);
+          return NextResponse.json({ ok: false }, { status: 500 });
+        }
+
+        console.log(`Abbonamento del cliente ${customerSubEmail} aggiornato a non attivo.`);
+        break;
+
+      default:
+        console.log(`Tipo di evento non gestito: ${event.type}.`);
+    }
+
+    return NextResponse.json({ ok: true }, { status: 200 });
+  } catch (err: any) {
+    console.error("Errore generale:", err.message);
+    return NextResponse.json({ ok: false }, { status: 500 });
+  }
+}
